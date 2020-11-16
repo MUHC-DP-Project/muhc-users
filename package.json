@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MUHC-DP-Project/muhc-gateway.git"
+    "url": "git+https://github.com/MUHC-DP-Project/muhc-users.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MUHC-DP-Project/muhc-gateway/issues"
+    "url": "https://github.com/MUHC-DP-Project/muhc-users/issues"
   },
-  "homepage": "https://github.com/MUHC-DP-Project/muhc-gateway#readme",
+  "homepage": "https://github.com/MUHC-DP-Project/muhc-users#readme",
   "dependencies": {
     "express": "^4.17.1"
   },
