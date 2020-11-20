@@ -1,5 +1,0 @@
-language: node_js
-node_js:
-  - 7
-notifications:
-  slack: muhcdpproject:mdFY1m0X3XGycyBWcvsQz74S
