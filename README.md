@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/MUHC-DP-Project/muhc-users.svg?branch=main)](https://travis-ci.com/MUHC-DP-Project/muhc-users)
 # pbrn-users
 
 ## Purpose 
@@ -15,3 +16,4 @@ For information about the technology stack used in this repository please refer 
 - clone the repository
 - `npm install`  to install all dependencies
 - `npm start` to run the service
+
