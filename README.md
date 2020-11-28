@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/MUHC-DP-Project/muhc-users.svg?branch=main)](https://travis-ci.com/MUHC-DP-Project/muhc-users)
+[![Build Status](https://travis-ci.com/MUHC-DP-Project/pbrn-users.svg?branch=main)](https://travis-ci.com/MUHC-DP-Project/pbrn-users)
 # pbrn-users
 
 ## Purpose 
