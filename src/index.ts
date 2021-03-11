@@ -6,7 +6,7 @@ import connectDB from "./database/db_config";
 import {userRouter} from './routes/user';
 
 const app = express();
-const port = 8080; // default port to listen
+const port = 8081; // default port to listen
 
 // allow cors and security headers
 app.use(cors());
