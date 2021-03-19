@@ -1,7 +1,13 @@
 export interface IUser {
-    // account
-    userId:string;
+    
+    // auth
     userPassword:string;
+    isApproved: boolean;
+    isEmailVerified: boolean;
+    email: string;
+    verificationNotes: string;
+
+
     // profile
     salutation:string;
     firstName:string;

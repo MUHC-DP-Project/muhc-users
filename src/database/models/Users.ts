@@ -5,10 +5,18 @@ export interface IUserModel extends IUser, Document {}
 
 const userSchema: Schema = new Schema(
     {
-    // profile
-    salutation:String,
+    // auth -- required when you first sign up
+    email: String,
+    userPassword:String,  
+    isApproved: Boolean,
+    isEmailVerified: Boolean,
     firstName:String,
     lastName:String,
+    professionalOccupation:String,
+    verificationNotes: String,
+
+    // additional fields
+    salutation:String,
     credentialsQualifications:String,
     gender:String,
     communicationSelect:String,
@@ -18,7 +26,6 @@ const userSchema: Schema = new Schema(
     secondaryClinic:String,
 
     // research&interests
-    professionalOccupation:String,
     workStatus:String,
     role:String,
     researchInterests:[{type: String}],
@@ -30,7 +37,6 @@ const userSchema: Schema = new Schema(
 
     // T&C
     acceptedTermsAndConditions:Boolean,
-    userPassword:String,
     },
     {
         timestamps: true

@@ -29,13 +29,13 @@
     "express": "^4.17.1",
     "express-validator": "^6.7.0",
     "helmet": "^4.2.0",
-    "mongoose": "^5.10.17",
+    "mongoose": "^5.12.1",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.8",
     "@types/express": "^4.17.8",
-    "@types/node": "^14.14.6",
+    "@types/node": "^14.14.35",
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "tslint": "^6.1.3",

@@ -16,6 +16,7 @@ userRouter.get(
     userController.show
 );
 
+// TODO: Remove API to create:
 userRouter.post(
     "/",
     userValidator("POST /users"),

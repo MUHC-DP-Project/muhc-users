@@ -47,9 +47,8 @@ const userController = {
         }
     },
 
+    // TODO: remove once signUp complete.
     create: async (req: Request, res: Response) => {
-        global.console.log('req: ',JSON.stringify(req.body));
-
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(statusCodes.MISSING_PARAMS).json(
