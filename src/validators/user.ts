@@ -1,6 +1,6 @@
 import { body, param, ValidationChain } from "express-validator/check";
 
-// TODO: add validation for signUp call, signIn, etc. 
+// TODO: add validation for signUp call, signIn, etc.
 export function userValidator(method: string): ValidationChain[] {
     switch (method) {
         case "GET /users": {

@@ -1,13 +1,16 @@
 import { Document, Model, Types, model, Schema } from "mongoose";
 import { IUser } from '../../interfaces/IUser';
+import {bcrypt} from 'bcrypt';
 
-export interface IUserModel extends IUser, Document {}
+export interface IUserModel extends IUser, Document {
+    password: string
+}
 
 const userSchema: Schema = new Schema(
     {
     // auth -- required when you first sign up
     email: String,
-    userPassword:String,  
+    password:String,
     isApproved: Boolean,
     isEmailVerified: Boolean,
     firstName:String,

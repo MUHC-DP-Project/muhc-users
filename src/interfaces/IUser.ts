@@ -1,7 +1,7 @@
 export interface IUser {
-    
+
     // auth
-    userPassword:string;
+    password:string;
     isApproved: boolean;
     isEmailVerified: boolean;
     email: string;
