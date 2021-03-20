@@ -14,6 +14,10 @@ export const userDBInteractions = {
         return User.findOne({ _id : userId }).exec();
     },
 
+    findByEmail: (userEmail: string): Promise<IUserModel> => {
+        return User.findOne({ email : userEmail }).exec();
+    },
+
     update: (
         userId: string,
         newUser: IUser

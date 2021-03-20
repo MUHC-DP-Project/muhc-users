@@ -3,7 +3,8 @@ import { validationResult } from "express-validator/check";
 import { IUserModel } from "../database/models/Users";
 import { userDBInteractions } from "../database/interactions/user";
 import { errorMessage } from "../config/errorFormatter";
-import { IUser } from "../interfaces/IUser";import hashPassword from "../utils/password-hash";
+import { IUser } from "../interfaces/IUser";
+import {hashPassword, compareHash } from "../utils/password-hash";
 import { statusCodes } from "../config/statusCodes";
 import {jwt} from 'jsonwebtoken';
 import {sendVerifyEmail, sendApprovalEmail} from '../services/email-sender';
@@ -57,6 +58,50 @@ const userAuthController = {
     },
 
     signIn: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        } else {
+            try {
+
+                const userInfo = req.body;
+
+                // get user by email
+                const user: IUserModel = await userDBInteractions.findByEmail(
+                    userInfo.email
+                );
+
+                if(user == null){
+                    throw new Error("User email is not found in system.")
+                }
+
+                const passwordHash = user.password;
+
+                // compare hash password
+                const isCorrectPassword = compareHash(userInfo.password, passwordHash);
+
+                if(!isCorrectPassword){
+                    throw new Error("Incorrect Password")
+                }
+
+                // generate session token
+                const token = jwt.sign({_id : user._id.toString(), isApproved: user.isApproved, isEmailVerified: user.isEmailVerified}, process.env.JWT_SECRET, {algorithm: 'HS256', expiresIn: '2d'});
+
+                res.status(200).json({
+                    user,
+                    token
+                });
+            }
+            catch (error) {
+                res.status(statusCodes.SERVER_ERROR).json(error);
+            }
+        // compare hash
+
         /*
             --> hash password
             --> find user with email and password
@@ -64,6 +109,7 @@ const userAuthController = {
             --> send back token.
             --> send back user as well.
         */
+        }
     },
 
     approveUser: async (req: Request, res: Response) => {
