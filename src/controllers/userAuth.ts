@@ -6,7 +6,7 @@ import { errorMessage } from "../config/errorFormatter";
 import { IUser } from "../interfaces/IUser";
 import {hashPassword, compareHash } from "../utils/password-hash";
 import { statusCodes } from "../config/statusCodes";
-import {jwt} from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import {sendVerifyEmail, sendApprovalEmail} from '../services/email-sender';
 
 const userAuthController = {
@@ -100,15 +100,6 @@ const userAuthController = {
             catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
             }
-        // compare hash
-
-        /*
-            --> hash password
-            --> find user with email and password
-            --> create the jwt token (user._id, user.isApproved, user.isEmailVerified)
-            --> send back token.
-            --> send back user as well.
-        */
         }
     },
 
@@ -128,3 +119,5 @@ const userAuthController = {
         */
     }
 }
+
+export { userAuthController };

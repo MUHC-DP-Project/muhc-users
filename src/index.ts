@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import helmet from "helmet";
 import connectDB from "./database/db_config";
 import {userRouter} from './routes/user';
+import {userAuthRouter} from './routes/userAuth';
 
 const app = express();
 const port = 8081; // default port to listen
@@ -27,6 +28,7 @@ app.get( "/", ( req, res ) => {
 } );
 
 app.use('/users', userRouter);
+app.use('/auth', userAuthRouter);
 
 // start the Express server
 app.listen( port, () => {
