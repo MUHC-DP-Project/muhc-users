@@ -47,35 +47,6 @@ const userController = {
         }
     },
 
-    // TODO: remove once signUp complete.
-    create: async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(statusCodes.MISSING_PARAMS).json(
-                {
-                    status: 422,
-                    message: errors.mapped()
-                }
-            );
-        } else {
-            try {
-                const user = req.body;
-
-               // HERE IS WHERE WE PROCESS INPUT AND CONVERT INTO OBJECT
-                const userData: IUser = {
-                    ...user
-                };
-
-                const newUser: IUserModel = await userDBInteractions.create(
-                    userData
-                );
-                res.status(statusCodes.SUCCESS).json(newUser);
-            } catch (error) {
-                res.status(statusCodes.SERVER_ERROR).json(error);
-            }
-        }
-    },
-
     update: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

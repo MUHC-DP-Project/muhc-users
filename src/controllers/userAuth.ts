@@ -23,8 +23,14 @@ const userAuthController = {
 
                 const user = req.body;
 
-                //TODO: block signup by same email
+                const userInDb: IUserModel = await userDBInteractions.findByEmail(
+                    user.email
+                );
 
+                if (userInDb != null){
+                    throw new Error("User already exists!");
+                }
+ 
                 // HERE IS WHERE WE PROCESS INPUT AND CONVERT INTO OBJECT
                 const userData: IUser = {
                     ...user

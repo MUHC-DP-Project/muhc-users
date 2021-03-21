@@ -16,13 +16,6 @@ userRouter.get(
     userController.show
 );
 
-// TODO: Remove API to create:
-userRouter.post(
-    "/",
-    userValidator("POST /users"),
-    userController.create
-);
-
 userRouter.put(
     "/:userId",
     userValidator("PUT /users/:userId"),
