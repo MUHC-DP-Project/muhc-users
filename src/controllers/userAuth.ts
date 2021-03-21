@@ -36,17 +36,11 @@ const userAuthController = {
                     userData
                 );
 
-                const id = newUser._id.toString();
-
-                // token
-                const token = jwt.sign({_id : id, isApproved: false, isEmailVerified: false}, process.env.JWT_SECRET, {algorithm: 'HS256', expiresIn: '5d'});
-
                 sendVerifyEmail(newUser);
                 sendApprovalEmail(newUser);
 
                 res.status(200).json({
-                    user : newUser,
-                    token
+                    newUser
                 });
             }
             catch (error) {

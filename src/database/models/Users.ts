@@ -9,7 +9,10 @@ export interface IUserModel extends IUser, Document {
 const userSchema: Schema = new Schema(
     {
     // auth -- required when you first sign up
-    email: String, // todo: make sure is unique
+    email: {
+        type: String,
+        unique: true
+    }, 
     password: {
         type: String,
         select: false
