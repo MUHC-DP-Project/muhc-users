@@ -113,7 +113,7 @@ const userAuthController = {
                 }
             );
         } else {
-            const jwtToken = req.body.jwtToken;
+            const jwtToken = req.params.jwtToken;
 
             jwt.verify(jwtToken, process.env.JWT_SECRET, async (err, decoded) => {
                 if (err || decoded.type !== "approve") {
@@ -156,7 +156,7 @@ const userAuthController = {
                 }
             );
         } else {
-            const jwtToken = req.body.jwtToken;
+            const jwtToken = req.params.jwtToken;
 
             jwt.verify(jwtToken, process.env.JWT_SECRET, async (err, decoded) => {
                 if (err || decoded.type !== "verify") {

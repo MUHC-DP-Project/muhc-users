@@ -19,13 +19,13 @@ userAuthRouter.post(
 );
 
 userAuthRouter.get(
-    "/verifyEmail",
+    "/verifyEmail/:jwtToken",
     authValidator('GET /verifyEmail'),
     userAuthController.verifyEmail
 );
 
 userAuthRouter.get(
-    "/approveUser",
+    "/approveUser/:jwtToken",
     authValidator('GET /approveUser'),
     userAuthController.approveUser
 )
