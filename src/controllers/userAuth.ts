@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { validationResult } from "express-validator/check";
 import { IUserModel } from "../database/models/Users";
 import { userDBInteractions } from "../database/interactions/user";
-import { errorMessage } from "../config/errorFormatter";
 import { IUser } from "../interfaces/IUser";
 import {hashPassword, compareHash } from "../utils/password-hash";
 import { statusCodes } from "../config/statusCodes";
@@ -83,7 +82,8 @@ const userAuthController = {
                 const passwordHash = user.password;
 
                 // compare hash password
-                const isCorrectPassword = compareHash(userInfo.password, passwordHash);
+                // TODO WE CAN SIGN IN WITHOUT THE RIGHT PASSWORD. THIS THROWS AN EXCEPTION
+                const isCorrectPassword = await compareHash(userInfo.password, passwordHash);
 
                 if(!isCorrectPassword){
                     throw new Error("Incorrect Password")
@@ -104,19 +104,89 @@ const userAuthController = {
     },
 
     approveUser: async (req: Request, res: Response) => {
-        /*
-            --> /approve-user/_id/jwt token
-            --> decode jwt token to _id
-            --> then update user for .isApproved.
-        */
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        } else {
+            const jwtToken = req.body.jwtToken;
+
+            jwt.verify(jwtToken, process.env.JWT_SECRET, async (err, decoded) => {
+                if (err || decoded.type !== "approve") {
+                    res.status(statusCodes.BAD_REQUEST).json(
+                        {
+                            status: 422,
+                            message: err
+                        }
+                    );
+                } else {
+                    let userData : IUser;
+                    const userId = decoded.userId;
+                    try {
+                        userData = await userDBInteractions.find(userId);
+                    } catch (err) {
+                        res.status(statusCodes.BAD_REQUEST).json(
+                            {
+                                status: 422,
+                                message: err
+                            }
+                        );
+                        return;
+                    }
+
+                    userData.isApproved = true;
+                    await userDBInteractions.update(userId, userData);
+                    res.status(statusCodes.SUCCESS);
+                }
+            });
+        }
     },
 
     verifyEmail: async (req: Request, res: Response) => {
-        /*
-            --> /verify-email/jwt token
-            --> decode to _id
-            -=> update .isEmailVerified.
-        */
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        } else {
+            const jwtToken = req.body.jwtToken;
+
+            jwt.verify(jwtToken, process.env.JWT_SECRET, async (err, decoded) => {
+                if (err || decoded.type !== "verify") {
+                    res.status(statusCodes.BAD_REQUEST).json(
+                        {
+                            status: 422,
+                            message: err
+                        }
+                    );
+                } else {
+                    let userData : IUser;
+                    const userId = decoded.userId;
+                    try {
+                        userData = await userDBInteractions.find(userId);
+                    } catch (err) {
+                        res.status(statusCodes.BAD_REQUEST).json(
+                            {
+                                status: 422,
+                                message: err
+                            }
+                        );
+                        return;
+                    }
+
+                    userData.isEmailVerified = true;
+                    await userDBInteractions.update(userId, userData);
+                    res.status(statusCodes.SUCCESS);
+                }
+            });
+        }
     }
 }
 
