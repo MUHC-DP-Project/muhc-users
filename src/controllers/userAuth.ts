@@ -23,6 +23,8 @@ const userAuthController = {
 
                 const user = req.body;
 
+                //TODO: block signup by same email
+
                 // HERE IS WHERE WE PROCESS INPUT AND CONVERT INTO OBJECT
                 const userData: IUser = {
                     ...user
@@ -39,9 +41,7 @@ const userAuthController = {
                 sendVerifyEmail(newUser);
                 sendApprovalEmail(newUser);
 
-                res.status(200).json({
-                    newUser
-                });
+                res.status(200).json(newUser);
             }
             catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
