@@ -128,19 +128,12 @@ const userAuthController = {
                     const userId = decoded.userId;
                     try {
                         userData = await userDBInteractions.find(userId);
-                    } catch (err) {
-                        res.status(statusCodes.BAD_REQUEST).json(
-                            {
-                                status: 422,
-                                message: err
-                            }
-                        );
-                        return;
+                        userData.isApproved = true;
+                        await userDBInteractions.update(userId, userData);
+                        res.sendStatus(statusCodes.SUCCESS);
+                    } catch (error) {
+                        res.status(statusCodes.SERVER_ERROR).json(error);
                     }
-
-                    userData.isApproved = true;
-                    await userDBInteractions.update(userId, userData);
-                    res.status(statusCodes.SUCCESS);
                 }
             });
         }
@@ -171,19 +164,12 @@ const userAuthController = {
                     const userId = decoded.userId;
                     try {
                         userData = await userDBInteractions.find(userId);
-                    } catch (err) {
-                        res.status(statusCodes.BAD_REQUEST).json(
-                            {
-                                status: 422,
-                                message: err
-                            }
-                        );
-                        return;
+                        userData.isEmailVerified = true;
+                        await userDBInteractions.update(userId, userData);
+                        res.sendStatus(statusCodes.SUCCESS);
+                    } catch (error) {
+                        res.status(statusCodes.SERVER_ERROR).json(error);
                     }
-
-                    userData.isEmailVerified = true;
-                    await userDBInteractions.update(userId, userData);
-                    res.status(statusCodes.SUCCESS);
                 }
             });
         }
