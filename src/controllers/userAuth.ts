@@ -45,7 +45,7 @@ const userAuthController = {
                 );
 
                 sendVerifyEmail(newUser);
-                // sendApprovalEmail(newUser);
+                sendApprovalEmail(newUser);
 
                 res.status(200).json(newUser);
             }
@@ -104,6 +104,8 @@ const userAuthController = {
     },
 
     approveUser: async (req: Request, res: Response) => {
+        const approvedHtml = '<h1>This user has been approved. You may close this window</h1>'
+
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(statusCodes.MISSING_PARAMS).json(
@@ -125,12 +127,12 @@ const userAuthController = {
                     );
                 } else {
                     let userData : IUser;
-                    const userId = decoded.userId;
+                    const userId = decoded._id;
                     try {
                         userData = await userDBInteractions.find(userId);
                         userData.isApproved = true;
                         await userDBInteractions.update(userId, userData);
-                        res.sendStatus(statusCodes.SUCCESS);
+                        res.status(statusCodes.SUCCESS).send(approvedHtml);
                     } catch (error) {
                         res.status(statusCodes.SERVER_ERROR).json(error);
                     }
@@ -140,6 +142,8 @@ const userAuthController = {
     },
 
     verifyEmail: async (req: Request, res: Response) => {
+        const verifiedHtml = '<h1>You have been verified! You may close this window.</h1>'
+
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(statusCodes.MISSING_PARAMS).json(
@@ -166,7 +170,7 @@ const userAuthController = {
                         userData = await userDBInteractions.find(userId);
                         userData.isEmailVerified = true;
                         await userDBInteractions.update(userId, userData);
-                        res.sendStatus(statusCodes.SUCCESS);
+                        res.status(statusCodes.SUCCESS).send(verifiedHtml);
                     } catch (error) {
                         res.status(statusCodes.SERVER_ERROR).json(error);
                     }
