@@ -161,7 +161,7 @@ const userAuthController = {
                     );
                 } else {
                     let userData : IUser;
-                    const userId = decoded.userId;
+                    const userId = decoded._id;
                     try {
                         userData = await userDBInteractions.find(userId);
                         userData.isEmailVerified = true;
