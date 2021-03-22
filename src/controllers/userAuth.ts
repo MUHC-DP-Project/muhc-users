@@ -30,7 +30,7 @@ const userAuthController = {
                 if (userInDb != null){
                     throw new Error("User already exists!");
                 }
- 
+
                 // HERE IS WHERE WE PROCESS INPUT AND CONVERT INTO OBJECT
                 const userData: IUser = {
                     ...user
@@ -45,7 +45,7 @@ const userAuthController = {
                 );
 
                 sendVerifyEmail(newUser);
-                sendApprovalEmail(newUser);
+                // sendApprovalEmail(newUser);
 
                 res.status(200).json(newUser);
             }
