@@ -76,7 +76,9 @@ const userController = {
                         updatedUserBody
                     );
 
-                    res.status(statusCodes.SUCCESS).json(updatedUser);
+                    const {password, ...updatedUserWithoutPassword} = updatedUser.toJSON();
+
+                    res.status(statusCodes.SUCCESS).json(updatedUserWithoutPassword);
 
                 }
             } catch (error) {

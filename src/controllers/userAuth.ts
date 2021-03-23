@@ -28,7 +28,13 @@ const userAuthController = {
                 );
 
                 if (userInDb != null){
-                    throw new Error("User already exists!");
+                    res.status(statusCodes.SERVER_ERROR).json(
+                        {
+                            status: statusCodes.SERVER_ERROR,
+                            message: "User email already exists!"
+                        }
+                    );
+                    return;
                 }
 
                 // HERE IS WHERE WE PROCESS INPUT AND CONVERT INTO OBJECT
@@ -47,7 +53,9 @@ const userAuthController = {
                 sendVerifyEmail(newUser);
                 sendApprovalEmail(newUser);
 
-                res.status(200).json(newUser);
+                const {password, ...newUserWithoutPassword} = newUser.toJSON();
+
+                res.status(200).json(newUserWithoutPassword);
             }
             catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
@@ -76,7 +84,13 @@ const userAuthController = {
                 );
 
                 if(user == null){
-                    throw new Error("User email is not found in system.")
+                    res.status(statusCodes.SERVER_ERROR).json(
+                        {
+                            status: statusCodes.SERVER_ERROR,
+                            message: "User email is not found in system."
+                        }
+                    );
+                    return;
                 }
 
                 const passwordHash = user.password;
@@ -86,7 +100,13 @@ const userAuthController = {
                 const isCorrectPassword = await compareHash(userInfo.password, passwordHash);
 
                 if(!isCorrectPassword){
-                    throw new Error("Incorrect Password")
+                    res.status(statusCodes.SERVER_ERROR).json(
+                        {
+                            status: statusCodes.SERVER_ERROR,
+                            message: "Incorrect password"
+                        }
+                    );
+                    return;
                 }
 
                 // generate session token
