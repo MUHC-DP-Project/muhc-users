@@ -1,14 +1,31 @@
 import { Document, Model, Types, model, Schema } from "mongoose";
 import { IUser } from '../../interfaces/IUser';
+import {bcrypt} from 'bcrypt';
 
-export interface IUserModel extends IUser, Document {}
+export interface IUserModel extends IUser, Document {
+    password: string
+}
 
 const userSchema: Schema = new Schema(
     {
-    // profile
-    salutation:String,
+    // auth -- required when you first sign up
+    email: {
+        type: String,
+        unique: true
+    },
+    password: {
+        type: String,
+        select: false
+    },
+    isApproved: Boolean,
+    isEmailVerified: Boolean,
     firstName:String,
     lastName:String,
+    professionalOccupation:String,
+    verificationNotes: String,
+
+    // additional fields
+    salutation:String,
     credentialsQualifications:String,
     gender:String,
     communicationSelect:String,
@@ -18,7 +35,6 @@ const userSchema: Schema = new Schema(
     secondaryClinic:String,
 
     // research&interests
-    professionalOccupation:String,
     workStatus:String,
     role:String,
     researchInterests:[{type: String}],
@@ -30,7 +46,6 @@ const userSchema: Schema = new Schema(
 
     // T&C
     acceptedTermsAndConditions:Boolean,
-    userPassword:String,
     },
     {
         timestamps: true

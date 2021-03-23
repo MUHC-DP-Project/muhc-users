@@ -1,5 +1,6 @@
 import { body, param, ValidationChain } from "express-validator/check";
 
+// TODO: add validation for signUp call, signIn, etc.
 export function userValidator(method: string): ValidationChain[] {
     switch (method) {
         case "GET /users": {
@@ -13,23 +14,23 @@ export function userValidator(method: string): ValidationChain[] {
         }
         case "POST /users": {
             return [
-                body("salutation", "Invalid or missing 'salutation'").isString().exists(),
-                body("firstName", "Invalid or missing 'firstName'").isString().exists(),
-                body("lastName", "Invalid or missing 'lastName'").isString().exists(),
-                body("credentialsQualifications", "Invalid or missing 'credentialsQualifications'").isString().exists(),
-                body("gender", "Invalid or missing 'gender'").isString().exists(),
-                body("communicationSelect", "Invalid or missing 'communicationSelect'").isString().exists(),
-                body("communicationTextfield", "Invalid or missing 'communicationTextfield'").isString().exists(),
+                body("salutation", "Invalid or missing 'salutation'").isString().optional(),
+                body("firstName", "Invalid or missing 'firstName'").isString().optional(),
+                body("lastName", "Invalid or missing 'lastName'").isString().optional(),
+                body("credentialsQualifications", "Invalid or missing 'credentialsQualifications'").isString().optional(),
+                body("gender", "Invalid or missing 'gender'").isString().optional(),
+                body("communicationSelect", "Invalid or missing 'communicationSelect'").isString().optional(),
+                body("communicationTextfield", "Invalid or missing 'communicationTextfield'").isString().optional(),
                 body("principalUniversityAffiliation", "Invalid or missing 'principalUniversityAffiliation'").isString(),
-                body("principalClinic", "Invalid or missing 'principalClinic'").isString().exists(),
-                body("secondaryClinic", "Missing 'secondaryClinic'").isString().exists(),
-                body("professionalOccupation", "Missing 'professionalOccupation'").isString().exists(),
-                body("workStatus", "Missing 'workStatus'").isString().exists(),
-                body("role", "Missing 'role'").isString().exists(),
-                body("researchInterests", "Missing 'researchInterests'").isArray().exists(),
-                body("levelOfResearch", "Missing 'levelOfResearch'").isString().exists(),
-                body("motivationForJoining", "Missing 'motivationForJoining'").isArray().exists(),
-                body("foundAboutUs", "Missing 'foundAboutUs'").isArray().exists(),
+                body("principalClinic", "Invalid or missing 'principalClinic'").isString().optional(),
+                body("secondaryClinic", "Missing 'secondaryClinic'").isString().optional(),
+                body("professionalOccupation", "Missing 'professionalOccupation'").isString().optional(),
+                body("workStatus", "Missing 'workStatus'").isString().optional(),
+                body("role", "Missing 'role'").isString().optional(),
+                body("researchInterests", "Missing 'researchInterests'").isArray().optional(),
+                body("levelOfResearch", "Missing 'levelOfResearch'").isString().optional(),
+                body("motivationForJoining", "Missing 'motivationForJoining'").isArray().optional(),
+                body("foundAboutUs", "Missing 'foundAboutUs'").isArray().optional(),
             ];
         }
 
@@ -38,25 +39,25 @@ export function userValidator(method: string): ValidationChain[] {
                 param("userId", "Invalid or missing ':userId'")
                     .exists()
                     .isMongoId(),
-                body("salutation", "Invalid or missing 'salutation'").isString().exists(),
-                body("firstName", "Invalid or missing 'firstName'").isString().exists(),
-                body("lastName", "Invalid or missing 'lastName'").isString().exists(),
-                body("credentialsQualifications", "Invalid or missing 'credentialsQualifications'").isString().exists(),
-                body("gender", "Invalid or missing 'gender'").isString().exists(),
-                body("communicationSelect", "Invalid or missing 'communicationSelect'").isString().exists(),
-                body("communicationTextfield", "Invalid or missing 'communicationTextfield'").isString().exists(),
+                body("salutation", "Invalid or missing 'salutation'").isString().optional(),
+                body("firstName", "Invalid or missing 'firstName'").isString().optional(),
+                body("lastName", "Invalid or missing 'lastName'").isString().optional(),
+                body("credentialsQualifications", "Invalid or missing 'credentialsQualifications'").isString().optional(),
+                body("gender", "Invalid or missing 'gender'").isString().optional(),
+                body("communicationSelect", "Invalid or missing 'communicationSelect'").isString().optional(),
+                body("communicationTextfield", "Invalid or missing 'communicationTextfield'").isString().optional(),
                 body("principalUniversityAffiliation", "Invalid or missing 'principalUniversityAffiliation'").isString(),
-                body("principalClinic", "Invalid or missing 'principalClinic'").isString().exists(),
-                body("secondaryClinic", "Missing 'secondaryClinic'").isString().exists(),
-                body("professionalOccupation", "Missing 'professionalOccupation'").isString().exists(),
-                body("workStatus", "Missing 'workStatus'").isString().exists(),
-                body("role", "Missing 'role'").isString().exists(),
-                body("researchInterests", "Missing 'researchInterests'").isArray().exists(),
-                body("levelOfResearch", "Missing 'levelOfResearch'").isString().exists(),
-                body("motivationForJoining", "Missing 'motivationForJoining'").isArray().exists(),
-                body("foundAboutUs", "Missing 'foundAboutUs'").isArray().exists(),
+                body("principalClinic", "Invalid or missing 'principalClinic'").isString().optional(),
+                body("secondaryClinic", "Missing 'secondaryClinic'").isString().optional(),
+                body("professionalOccupation", "Missing 'professionalOccupation'").isString().optional(),
+                body("workStatus", "Missing 'workStatus'").isString().optional(),
+                body("role", "Missing 'role'").isString().optional(),
+                body("researchInterests", "Missing 'researchInterests'").isArray().optional(),
+                body("levelOfResearch", "Missing 'levelOfResearch'").isString().optional(),
+                body("motivationForJoining", "Missing 'motivationForJoining'").isArray().optional(),
+                body("foundAboutUs", "Missing 'foundAboutUs'").isArray().optional(),
                 body("acceptedTermsAndConditions", "Missing 'acceptedTermsAndConditions'").isBoolean(),
-                body("userPassword", "Missing 'userPassword'").isString().exists(),
+                body("userPassword", "Missing 'userPassword'").isString().optional(),
             ];
         }
 
