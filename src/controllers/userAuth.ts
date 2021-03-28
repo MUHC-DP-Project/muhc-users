@@ -212,7 +212,7 @@ const userAuthController = {
         } else {
             const oldPassword = req.body.oldPassword;
             const newPassword = req.body.newPassword;
-            const jwtToken = req.body.jwtToken;
+            const jwtToken = req.headers?.authorization.split(" ")[1];
 
             jwt.verify(jwtToken, process.env.JWT_SECRET, async (err, decoded) => {
                 if (err) {
@@ -229,7 +229,7 @@ const userAuthController = {
                         userData = await userDBInteractions.findWithPassword(userId);
                         const result = await compareHash(oldPassword, userData.password);;
                         if (!result) {
-                            throw new Error('Wrong old password');
+                            throw { "error" : "Wrong old password" };
                         }
                         userData.password = await hashPassword(newPassword);
                         await userDBInteractions.update(userId, userData);

@@ -1,4 +1,4 @@
-import { body, param, ValidationChain } from "express-validator/check";
+import { body, header, param, ValidationChain } from "express-validator/check";
 
 export function authValidator(method: string): ValidationChain[] {
     switch (method) {
@@ -27,7 +27,7 @@ export function authValidator(method: string): ValidationChain[] {
             return [
                 body("oldPassword", "Invalid or missing 'oldPassword'").isString().exists(),
                 body("newPassword", "Invalid or missing 'newPassword'").isString().exists(),
-                body("jwtToken", "Invalid or missing 'jwtToken'").isString().exists()
+                header("authorization", "Invalid or missing 'authorization'").isString().exists()
             ];
         }
     }
