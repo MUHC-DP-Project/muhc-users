@@ -112,6 +112,45 @@ const userController = {
             }
 
         }
+    },
+
+    connectToProjects: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: Connecting users to projects was done incorrectly.`
+                }
+            );
+        } else {
+            try{
+                const projectId = req.params.projectId;
+                const pIListOfProjects = req.body.pIListOfProjects;
+                const coIListOfProjects = req.body.coIListOfProjects;
+                const colListOfProjects = req.body.colListOfProjects;
+
+                const piList = pIListOfProjects.map(
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "pIListOfProjects")}
+                );
+
+                const coList = coIListOfProjects.map(
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "coIListOfProjects")}
+                );
+
+                const colList = colListOfProjects.map(
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "colListOfProjects")}
+                );
+
+                await Promise.all(piList + coList + colList);
+
+                res.status(statusCodes.SUCCESS).send();
+
+            }catch(err){
+                res.status(statusCodes.SERVER_ERROR).send(err);
+            }
+
+        }
     }
 };
 export { userController };

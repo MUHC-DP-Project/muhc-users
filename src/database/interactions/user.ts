@@ -29,4 +29,14 @@ export const userDBInteractions = {
         }).exec();
     },
 
+    linkProject: (
+        userEmail: string,
+        projectId: string,
+        connectionType: string,
+    ): Promise<IUserModel> => {
+        return User.findOneAndUpdate(
+            { email: userEmail},
+            { $addToSet: { [connectionType]: projectId } }).exec();
+    }
+
 }

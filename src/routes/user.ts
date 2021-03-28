@@ -22,6 +22,12 @@ userRouter.put(
     userController.update
 );
 
+userRouter.put(
+    "/connectToProjects/:projectId",
+    // userValidator("PUT /users/connectToProjects"),
+    userController.connectToProjects
+);
+
 userRouter.delete(
     "/:userId",
     userValidator("DELETE /users/:userId"),

@@ -58,6 +58,9 @@ export function userValidator(method: string): ValidationChain[] {
                 body("foundAboutUs", "Missing 'foundAboutUs'").isArray().optional(),
                 body("acceptedTermsAndConditions", "Missing 'acceptedTermsAndConditions'").isBoolean(),
                 body("userPassword", "Missing 'userPassword'").isString().optional(),
+                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().exists(),
+                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().exists(),
+                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().exists(),
             ];
         }
 
