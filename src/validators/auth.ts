@@ -23,5 +23,12 @@ export function authValidator(method: string): ValidationChain[] {
                 body("password", "Invalid or missing 'password'").isString().exists(),
             ];
         }
+        case "POST /passwordReset": {
+            return [
+                body("oldPassword", "Invalid or missing 'oldPassword'").isString().exists(),
+                body("newPassword", "Invalid or missing 'newPassword'").isString().exists(),
+                body("jwtToken", "Invalid or missing 'jwtToken'").isString().exists()
+            ];
+        }
     }
 }
