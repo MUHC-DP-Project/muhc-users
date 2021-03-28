@@ -1,4 +1,4 @@
-import { body, param, ValidationChain } from "express-validator/check";
+import { body, header, param, ValidationChain } from "express-validator/check";
 
 export function authValidator(method: string): ValidationChain[] {
     switch (method) {
@@ -21,6 +21,13 @@ export function authValidator(method: string): ValidationChain[] {
             return [
                 body("email", "Invalid or missing 'email'").isString().exists(),
                 body("password", "Invalid or missing 'password'").isString().exists(),
+            ];
+        }
+        case "POST /passwordReset": {
+            return [
+                body("oldPassword", "Invalid or missing 'oldPassword'").isString().exists(),
+                body("newPassword", "Invalid or missing 'newPassword'").isString().exists(),
+                header("authorization", "Invalid or missing 'authorization'").isString().exists()
             ];
         }
     }

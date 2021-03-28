@@ -28,6 +28,12 @@ userAuthRouter.get(
     "/approveUser/:jwtToken",
     authValidator('GET /approveUser'),
     userAuthController.approveUser
-)
+);
+
+userAuthRouter.post(
+    "/passwordReset",
+    authValidator('POST /passwordReset'),
+    userAuthController.resetPassword
+);
 
 export { userAuthRouter };
