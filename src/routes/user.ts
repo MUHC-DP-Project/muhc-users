@@ -24,7 +24,7 @@ userRouter.put(
 
 userRouter.put(
     "/connectToProjects/:projectId",
-    // userValidator("PUT /users/connectToProjects"),
+    userValidator("PUT /users/connectToProjects"),
     userController.connectToProjects
 );
 

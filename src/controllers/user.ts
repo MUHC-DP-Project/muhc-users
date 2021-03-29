@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+ import { Request, Response } from "express";
 import { validationResult } from "express-validator/check";
 import { IUserModel } from "../database/models/Users";
 import { statusCodes } from "../config/statusCodes";
@@ -126,22 +126,20 @@ const userController = {
         } else {
             try{
                 const projectId = req.params.projectId;
-                const pIListOfProjects = req.body.pIListOfProjects;
-                const coIListOfProjects = req.body.coIListOfProjects;
-                const colListOfProjects = req.body.colListOfProjects;
-
-                console.log(projectId + " " + pIListOfProjects);
+                const pIListOfProjects = req.body.PIListOfProjects;
+                const coIListOfProjects = req.body.CoIListOfProjects;
+                const colListOfProjects = req.body.ColListOfProjects;
 
                 const piList = pIListOfProjects.map(
-                    (x) => { return userDBInteractions.linkProject(x, projectId, "pIListOfProjects")}
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "PIListOfProjects")}
                 );
 
                 const coList = coIListOfProjects.map(
-                    (x) => { return userDBInteractions.linkProject(x, projectId, "coIListOfProjects")}
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "CoIListOfProjects")}
                 );
 
                 const colList = colListOfProjects.map(
-                    (x) => { return userDBInteractions.linkProject(x, projectId, "colListOfProjects")}
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "ColListOfProjects")}
                 );
 
                 await Promise.all(piList + coList + colList);

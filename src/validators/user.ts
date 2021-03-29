@@ -71,5 +71,13 @@ export function userValidator(method: string): ValidationChain[] {
                     .isMongoId()
             ];
         }
+
+        case "PUT /users/connectToProjects": {
+            return [
+                param("projectId", "Invalid or missing ':projectId'")
+                    .exists()
+                    .isMongoId(),
+            ];
+        }
     }
 }

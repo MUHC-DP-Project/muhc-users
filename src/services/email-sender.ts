@@ -18,7 +18,7 @@ const sendVerifyEmail = async (user: IUserModel) => {
     const token = jwt.sign({_id : user._id.toString(), type : "verify"}, process.env.JWT_SECRET, {algorithm: 'HS256', expiresIn: '365d'})
     const verificationLink = "http://localhost:8081/auth/verifyEmail/" + token;
     const verificationHTML = '<h1>Verify your account.</h1> <p>To get started on our platform please verify you account by clicking <a href="' + verificationLink + '">HERE</a>.</p> <p>Thanks,</p> <p>The PBRN team</p>';
-    
+
     const mailOptions = {
         from: 'pbrnnetwork@gmail.com',
         to: userEmail,

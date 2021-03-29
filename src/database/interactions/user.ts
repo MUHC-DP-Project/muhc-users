@@ -33,11 +33,12 @@ export const userDBInteractions = {
         userEmail: string,
         projectId: string,
         connectionType: string,
-        
+
     ): Promise<IUserModel> => {
+        console.log(userEmail + " " + projectId + " " + [connectionType]);
         return User.findOneAndUpdate(
             { email: userEmail},
-            { $addToSet: { [connectionType]: projectId } }).exec();
+            { $addToSet: { [connectionType]: projectId }}, {new : true}).exec();
     }
 
 }
