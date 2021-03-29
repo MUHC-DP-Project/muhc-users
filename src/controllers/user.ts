@@ -130,6 +130,8 @@ const userController = {
                 const coIListOfProjects = req.body.coIListOfProjects;
                 const colListOfProjects = req.body.colListOfProjects;
 
+                console.log(projectId + " " + pIListOfProjects);
+
                 const piList = pIListOfProjects.map(
                     (x) => { return userDBInteractions.linkProject(x, projectId, "pIListOfProjects")}
                 );

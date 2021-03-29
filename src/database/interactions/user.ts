@@ -33,6 +33,7 @@ export const userDBInteractions = {
         userEmail: string,
         projectId: string,
         connectionType: string,
+        
     ): Promise<IUserModel> => {
         return User.findOneAndUpdate(
             { email: userEmail},
