@@ -113,8 +113,7 @@ const userAuthController = {
 
                 res.status(200).json({
                     user,
-                    token,
-                    expiresIn: '2d'
+                    token
                 });
             }
             catch (error) {
