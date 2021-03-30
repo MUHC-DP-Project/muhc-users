@@ -36,4 +36,16 @@ userAuthRouter.post(
     userAuthController.resetPassword
 );
 
+userAuthRouter.post(
+    "/forgotPassword",
+    authValidator('POST /forgotPassword'),
+    userAuthController.forgotPassword
+);
+
+userAuthRouter.get(
+    "/forgotPasswordApproval/:jwtToken",
+    authValidator('GET /forgotPasswordApproval'),
+    userAuthController.forgotPasswordApproval
+)
+
 export { userAuthRouter };

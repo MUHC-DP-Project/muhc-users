@@ -30,5 +30,13 @@ export function authValidator(method: string): ValidationChain[] {
                 header("authorization", "Invalid or missing 'authorization'").isString().exists()
             ];
         }
+        case "POST /forgotPassword" : {
+            return [
+                body("email", "Invalid or missing 'email'").isString().exists()
+            ];
+        }
+        case "GET /forgotPasswordApproval" : {
+            return [param("jwtToken", "Invalid or missing 'jwtToken'").isString().exists()];
+        }
     }
 }
