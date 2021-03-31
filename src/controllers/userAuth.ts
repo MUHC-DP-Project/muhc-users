@@ -6,7 +6,7 @@ import { IUser } from "../interfaces/IUser";
 import {hashPassword, compareHash } from "../utils/password-hash";
 import { statusCodes } from "../config/statusCodes";
 import jwt from 'jsonwebtoken';
-import {sendVerifyEmail, sendApprovalEmail} from '../services/email-sender';
+import {sendVerifyEmail, sendApprovalEmail, sendForgotPasswordEmail} from '../services/email-sender';
 
 const userAuthController = {
     signUp: async (req: Request, res: Response) => {
@@ -196,6 +196,126 @@ const userAuthController = {
                     } catch (error) {
                         res.status(statusCodes.SERVER_ERROR).json(error);
                     }
+                }
+            });
+        }
+    },
+
+    resetPassword: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        } else {
+            const oldPassword = req.body.oldPassword;
+            const newPassword = req.body.newPassword;
+            const jwtToken = req.headers?.authorization.split(" ")[1];
+
+            jwt.verify(jwtToken, process.env.JWT_SECRET, async (err, decoded) => {
+                if (err) {
+                    res.status(statusCodes.BAD_REQUEST).json(
+                        {
+                            status: 422,
+                            message: err
+                        }
+                    );
+                } else {
+                    let userData : IUserModel;
+                    const userId = decoded._id;
+                    try {
+                        userData = await userDBInteractions.findWithPassword(userId);
+                        const result = await compareHash(oldPassword, userData.password);;
+                        if (!result) {
+                            throw { "error" : "Wrong old password" };
+                        }
+                        userData.password = await hashPassword(newPassword);
+                        await userDBInteractions.update(userId, userData);
+                        res.status(statusCodes.SUCCESS).send();
+                    } catch (error) {
+                        console.log(error);
+                        res.status(statusCodes.SERVER_ERROR).json(error);
+                    }
+                }
+            });
+        }
+    },
+        forgotPassword: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        } else {
+            const email = req.body.email;
+            let user : IUserModel;
+
+            try {
+                user = await userDBInteractions.findByEmail(email);
+
+                if(user == null) {
+                    res.status(statusCodes.SERVER_ERROR).json(
+                        {
+                            status: statusCodes.SERVER_ERROR,
+                            message: "User email is not found in system."
+                        }
+                    );
+                    return;
+                }
+
+                sendForgotPasswordEmail(user);
+                res.status(statusCodes.SUCCESS).send("Message sent");
+
+            } catch (error) {
+                console.log(error);
+                res.status(statusCodes.SERVER_ERROR).json(error);
+            }
+        }
+    },
+    forgotPasswordApproval: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        const html = '<h1>Your password has been changed</h1>'
+
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        } else {
+            const jwtToken = req.params.jwtToken;
+
+            jwt.verify(jwtToken, process.env.JWT_SECRET, async (err, decoded) => {
+                if (err) {
+                    res.status(statusCodes.BAD_REQUEST).json(
+                        {
+                            status: 422,
+                            message: err
+                        }
+                    );
+                } else {
+                    try {
+                        if (decoded.type !== "forgotPassword") {
+                            throw {"error" : "Wrong jwtToken"};
+                        }
+                        const userData : IUserModel = await userDBInteractions.findWithPassword(decoded._id);
+                        userData.password = await hashPassword(decoded.newPassword);
+                        await userDBInteractions.update(decoded._id, userData);
+
+                        res.status(statusCodes.SUCCESS).send(html);
+                    } catch (error) {
+                        res.status(statusCodes.SERVER_ERROR).json(error);
+                    }
+
                 }
             });
         }
