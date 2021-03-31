@@ -24,6 +24,11 @@ const userSchema: Schema = new Schema(
     professionalOccupation:String,
     verificationNotes: String,
 
+    // references to project IDs
+    PIListOfProjects: [{type: String}],
+    CoIListOfProjects: [{type: String}],
+    ColListOfProjects: [{type: String}],
+
     // additional fields
     salutation:String,
     credentialsQualifications:String,
