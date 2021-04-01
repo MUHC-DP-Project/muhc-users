@@ -36,6 +36,9 @@ export function userValidator(method: string): ValidationChain[] {
                 body("foundAboutUs", "Missing 'foundAboutUs'").isArray().optional(),
                 body("acceptedTermsAndConditions", "Missing 'acceptedTermsAndConditions'").isBoolean().optional(),
                 body("userPassword", "Missing 'userPassword'").isString().optional(),
+                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().exists(),
+                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().exists(),
+                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().exists(),
             ];
         }
 
@@ -44,6 +47,14 @@ export function userValidator(method: string): ValidationChain[] {
                 param("userId", "Invalid or missing ':userId'")
                     .exists()
                     .isMongoId()
+            ];
+        }
+
+        case "PUT /users/connectToProjects": {
+            return [
+                param("projectId", "Invalid or missing ':projectId'")
+                    .exists()
+                    .isMongoId(),
             ];
         }
     }

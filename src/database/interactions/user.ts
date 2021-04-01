@@ -33,4 +33,16 @@ export const userDBInteractions = {
         }).exec();
     },
 
+    linkProject: (
+        userEmail: string,
+        projectId: string,
+        connectionType: string,
+
+    ): Promise<IUserModel> => {
+        console.log(userEmail + " " + projectId + " " + [connectionType]);
+        return User.findOneAndUpdate(
+            { email: userEmail},
+            { $addToSet: { [connectionType]: projectId }}, {new : true}).exec();
+    }
+
 }

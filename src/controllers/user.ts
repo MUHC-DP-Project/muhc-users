@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+ import { Request, Response } from "express";
 import { validationResult } from "express-validator/check";
 import { IUserModel } from "../database/models/Users";
 import { statusCodes } from "../config/statusCodes";
@@ -110,6 +110,45 @@ const userController = {
                 user.delete();
                 res.status(statusCodes.SUCCESS).send();
             } catch(err) {
+                res.status(statusCodes.SERVER_ERROR).send(err);
+            }
+
+        }
+    },
+
+    connectToProjects: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: Connecting users to projects was done incorrectly.`
+                }
+            );
+        } else {
+            try{
+                const projectId = req.params.projectId;
+                const pIListOfProjects = req.body.PIListOfProjects;
+                const coIListOfProjects = req.body.CoIListOfProjects;
+                const colListOfProjects = req.body.ColListOfProjects;
+
+                const piList = pIListOfProjects.map(
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "PIListOfProjects")}
+                );
+
+                const coList = coIListOfProjects.map(
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "CoIListOfProjects")}
+                );
+
+                const colList = colListOfProjects.map(
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "ColListOfProjects")}
+                );
+
+                await Promise.all(piList + coList + colList);
+
+                res.status(statusCodes.SUCCESS).send();
+
+            }catch(err){
                 res.status(statusCodes.SERVER_ERROR).send(err);
             }
 

@@ -8,7 +8,7 @@ import {userAuthRouter} from './routes/userAuth';
 import nodemailer from 'nodemailer';
 
 const app = express();
-const port = 8081; // default port to listen
+const port = process.env.PORT || 8081; // default port to listen
 
 // allow cors and security headers
 app.use(cors());

@@ -44,6 +44,8 @@ const userAuthController = {
 
                 // hash password
                 userData.password = await hashPassword(userData.password);
+                userData.isApproved = false;
+                userData.isEmailVerified = false;
 
                 // create user and get _id
                 const newUser: IUserModel = await userDBInteractions.create(
