@@ -1,4 +1,5 @@
 import { IUserModel } from "../database/models/Users";
+import { IUser } from "../interfaces/IUser";
 import * as nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import {emailTransporter} from '../index';
@@ -79,4 +80,17 @@ function sendForgotPasswordEmail(user : IUserModel) {
   });
 }
 
-export {sendApprovalEmail, sendVerifyEmail, sendForgotPasswordEmail};
+function isApprovedEmail(user: IUser){
+  const verifiedEmails = ["@mail.mcgill.ca","@dms.umontreal.ca"];
+  const userEmail = user.email;
+  var i;
+  for( i= 0; i<verifiedEmails.length; i++){
+    if(userEmail.includes(verifiedEmails[i])){
+      return true;
+    }
+  }
+  return false;
+
+}
+
+export {sendApprovalEmail, sendVerifyEmail, sendForgotPasswordEmail, isApprovedEmail};

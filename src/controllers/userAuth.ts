@@ -6,7 +6,7 @@ import { IUser } from "../interfaces/IUser";
 import {hashPassword, compareHash } from "../utils/password-hash";
 import { statusCodes } from "../config/statusCodes";
 import jwt from 'jsonwebtoken';
-import {sendVerifyEmail, sendApprovalEmail, sendForgotPasswordEmail} from '../services/email-sender';
+import {sendVerifyEmail, sendApprovalEmail, sendForgotPasswordEmail, isApprovedEmail} from '../services/email-sender';
 
 const userAuthController = {
     signUp: async (req: Request, res: Response) => {
@@ -46,14 +46,17 @@ const userAuthController = {
                 userData.password = await hashPassword(userData.password);
                 userData.isApproved = false;
                 userData.isEmailVerified = false;
+                const isPreApproved = isApprovedEmail(userData);
 
                 // create user and get _id
                 const newUser: IUserModel = await userDBInteractions.create(
                     userData
                 );
 
+                if(!isPreApproved){
+                    sendApprovalEmail(newUser);
+                }
                 sendVerifyEmail(newUser);
-                sendApprovalEmail(newUser);
 
                 const {password, ...newUserWithoutPassword} = newUser.toJSON();
 
