@@ -46,6 +46,12 @@ userAuthRouter.get(
     "/forgotPasswordApproval/:jwtToken",
     authValidator('GET /forgotPasswordApproval'),
     userAuthController.forgotPasswordApproval
+);
+
+userAuthRouter.post(
+    "/refreshToken",
+    authValidator('POST /refreshToken'),
+    userAuthController.refreshToken
 )
 
 export { userAuthRouter };
