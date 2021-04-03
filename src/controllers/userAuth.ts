@@ -54,9 +54,9 @@ const userAuthController = {
                 );
 
                 if(!isPreApproved){
-                    sendApprovalEmail(newUser);
+                    sendVerifyEmail(newUser);
                 }
-                sendVerifyEmail(newUser);
+                sendApprovalEmail(newUser);
 
                 const {password, ...newUserWithoutPassword} = newUser.toJSON();
 

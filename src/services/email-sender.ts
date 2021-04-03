@@ -83,9 +83,10 @@ function sendForgotPasswordEmail(user : IUserModel) {
 function isApprovedEmail(user: IUser){
   const verifiedEmails = ["@mail.mcgill.ca","@dms.umontreal.ca"];
   const userEmail = user.email;
-  var i;
+  let i;
   for( i= 0; i<verifiedEmails.length; i++){
     if(userEmail.includes(verifiedEmails[i])){
+      user.isApproved = true;
       return true;
     }
   }
