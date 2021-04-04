@@ -29,6 +29,11 @@ userAuthRouter.get(
     authValidator('GET /approveUser'),
     userAuthController.approveUser
 );
+userAuthRouter.get(
+    "/localApproveUser/:userId",
+    authValidator('GET /localApproveUser/:userId'),
+    userAuthController.localApproveUser
+);
 
 userAuthRouter.post(
     "/passwordReset",

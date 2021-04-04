@@ -55,6 +55,12 @@ export function userValidator(method: string): ValidationChain[] {
                 param("projectId", "Invalid or missing ':projectId'")
                     .exists()
                     .isMongoId(),
+                param("ownerEmail", "Invalid or missing ':ownerEmail'")
+                .isString()
+                .exists(),
+                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().exists(),
+                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().exists(),
+                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().exists(),
             ];
         }
     }
