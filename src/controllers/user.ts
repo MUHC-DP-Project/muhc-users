@@ -98,6 +98,17 @@ const userController = {
             );
         } else {
             try {
+
+                if (res.locals._id !== req.params.userId) {
+                    let message = undefined;
+                    const userOfRequest : IUserModel = await userDBInteractions.find(res.locals._id);
+                    if(!userOfRequest) {
+                       message = "User that performed the request is not found";
+                    } else if (userOfRequest.) {
+
+                    }
+                    
+                }
                 const user = await userDBInteractions.find(req.params.userId);
                 if (!user) {
                     res.status(statusCodes.NOT_FOUND).json(
