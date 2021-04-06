@@ -32,7 +32,7 @@ userRouter.put(
 );
 
 userRouter.put(
-    "/connectToProjects/:projectId",
+    "/connectToProjects/:projectId/:ownerEmail",
     userValidator("PUT /users/connectToProjects"),
     userController.connectToProjects
 );

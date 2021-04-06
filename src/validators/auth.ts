@@ -38,8 +38,13 @@ export function authValidator(method: string): ValidationChain[] {
         case "GET /forgotPasswordApproval" : {
             return [param("jwtToken", "Invalid or missing 'jwtToken'").isString().exists()];
         }
+
+        case 'GET /localApproveUser/:userId':{
+            return [param("userId", "Invalid or missing 'userId'").isString().exists()];
+
         case "POST /refreshToken" : {
             return [header("authorization", "Invalid or missing 'authorization'").isString().exists()];
+
         }
     }
 }
