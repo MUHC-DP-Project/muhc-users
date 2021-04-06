@@ -8,7 +8,13 @@ import {IUser} from "../interfaces/IUser";
 import {v1 as uuidv1} from "uuid";
 
 const userController = {
-    getall: async(req : Request, res : Response) => {
+
+    healthcheck: async (req: Request, res: Response) => {
+        res.status(200).send("Success");
+    },
+
+    getall: async (req: Request, res: Response) => {
+
         try {
             const users = await userDBInteractions.all();
             res
