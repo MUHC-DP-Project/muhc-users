@@ -6,6 +6,11 @@ import { userValidator } from "../validators/user";
 const userRouter: Router = Router();
 
 userRouter.get(
+    "/healthcheck",
+    userController.healthcheck
+);
+
+userRouter.get(
     "/",
     authMiddleware,
     userValidator("GET /users"),

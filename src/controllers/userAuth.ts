@@ -6,7 +6,7 @@ import { IUser } from "../interfaces/IUser";
 import {hashPassword, compareHash } from "../utils/password-hash";
 import { statusCodes } from "../config/statusCodes";
 import jwt from 'jsonwebtoken';
-import {sendVerifyEmail, sendApprovalEmail, sendForgotPasswordEmail} from '../services/email-sender';
+import {sendVerifyEmail, sendApprovalEmail, sendForgotPasswordEmail, isApprovedEmail} from '../services/email-sender';
 
 const userAuthController = {
     signUp: async (req: Request, res: Response) => {
@@ -46,14 +46,17 @@ const userAuthController = {
                 userData.password = await hashPassword(userData.password);
                 userData.isApproved = false;
                 userData.isEmailVerified = false;
+                const isPreApproved = isApprovedEmail(userData);
 
                 // create user and get _id
                 const newUser: IUserModel = await userDBInteractions.create(
                     userData
                 );
 
+                if(!isPreApproved){
+                    sendApprovalEmail(newUser);
+                }
                 sendVerifyEmail(newUser);
-                sendApprovalEmail(newUser);
 
                 const {password, ...newUserWithoutPassword} = newUser.toJSON();
 
@@ -243,7 +246,8 @@ const userAuthController = {
             });
         }
     },
-        forgotPassword: async (req: Request, res: Response) => {
+
+    forgotPassword: async (req: Request, res: Response) => {
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
@@ -279,6 +283,7 @@ const userAuthController = {
             }
         }
     },
+
     forgotPasswordApproval: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         const html = '<h1>Your password has been changed</h1>'
@@ -315,6 +320,40 @@ const userAuthController = {
                         res.status(statusCodes.SERVER_ERROR).json(error);
                     }
 
+                }
+            });
+        }
+    },
+
+    refreshToken : async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        } else {
+            const jwtToken = req.headers?.authorization.split(" ")[1];
+
+            jwt.verify(jwtToken, process.env.JWT_SECRET, async (err, _decoded) => {
+                if (err) {
+                    if (err.name === 'TokenExpiredError') {
+                        const payload = jwt.verify(jwtToken, process.env.JWT_SECRET, {ignoreExpiration: true} );
+                        const newToken = jwt.sign({_id : payload._id, isApproved: payload.isApproved, isEmailVerified: payload.isEmailVerified}, process.env.JWT_SECRET, {algorithm: 'HS256', expiresIn: '2d'});
+                        res.status(statusCodes.SUCCESS).json({jwtToken: newToken});
+                    } else {
+                        res.status(statusCodes.BAD_REQUEST).json(
+                            {
+                                status: 422,
+                                message: err
+                            }
+                        );
+                    }
+                } else {
+                    res.status(statusCodes.SUCCESS).json({jwtToken})
                 }
             });
         }
