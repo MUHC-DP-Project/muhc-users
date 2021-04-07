@@ -25,6 +25,7 @@ const userSchema: Schema = new Schema(
     verificationNotes: String,
 
     // references to project IDs
+    userListOfProjects:[{type: String}],
     PIListOfProjects: [{type: String}],
     CoIListOfProjects: [{type: String}],
     ColListOfProjects: [{type: String}],
