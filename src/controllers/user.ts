@@ -101,20 +101,22 @@ const userController = {
                 .json({status: 422, message: `Error: there are missing parameters.`});
         } else {
             try {
-                const user = await userDBInteractions.find(req.params.userId);
+                const user : IUserModel= await userDBInteractions.find(req.params.userId);
                 if (!user) {
                     res
                         .status(statusCodes.NOT_FOUND)
                         .json({status: statusCodes.NOT_FOUND, message: "User not found"});
                 }
+                const projectListOfUser = {
+                    PIListOfProjects: user.PIListOfProjects || [],
+                    CoIListOfProjects: user.CoIListOfProjects || [],
+                    ColListOfProjects: user.ColListOfProjects || []
+                };
+
                 user.delete();
-                res
-                    .status(statusCodes.SUCCESS)
-                    .send();
-            } catch (err) {
-                res
-                    .status(statusCodes.SERVER_ERROR)
-                    .send(err);
+                res.status(statusCodes.SUCCESS).json(projectListOfUser);
+            } catch(err) {
+                res.status(statusCodes.SERVER_ERROR).send(err);
             }
 
         }
