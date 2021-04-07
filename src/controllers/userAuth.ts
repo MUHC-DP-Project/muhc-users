@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { request, Request, Response } from "express";
 import { validationResult } from "express-validator/check";
 import { IUserModel } from "../database/models/Users";
 import { userDBInteractions } from "../database/interactions/user";
@@ -6,7 +6,7 @@ import { IUser } from "../interfaces/IUser";
 import {hashPassword, compareHash } from "../utils/password-hash";
 import { statusCodes } from "../config/statusCodes";
 import jwt from 'jsonwebtoken';
-import {sendVerifyEmail, sendApprovalEmail, sendForgotPasswordEmail} from '../services/email-sender';
+import {sendVerifyEmail, sendApprovalEmail, sendForgotPasswordEmail, isApprovedEmail} from '../services/email-sender';
 
 const userAuthController = {
     signUp: async (req: Request, res: Response) => {
@@ -46,14 +46,17 @@ const userAuthController = {
                 userData.password = await hashPassword(userData.password);
                 userData.isApproved = false;
                 userData.isEmailVerified = false;
+                const isPreApproved = isApprovedEmail(userData);
 
                 // create user and get _id
                 const newUser: IUserModel = await userDBInteractions.create(
                     userData
                 );
 
+                if(!isPreApproved){
+                    sendApprovalEmail(newUser);
+                }
                 sendVerifyEmail(newUser);
-                sendApprovalEmail(newUser);
 
                 const {password, ...newUserWithoutPassword} = newUser.toJSON();
 
@@ -116,7 +119,8 @@ const userAuthController = {
 
                 res.status(200).json({
                     user,
-                    token
+                    token,
+                    expiresIn: '2d'
                 });
             }
             catch (error) {
@@ -162,7 +166,29 @@ const userAuthController = {
             });
         }
     },
+    localApproveUser:async (req: Request,res:Response)=>{
+        const errors=validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        }else{
+            const userId=req.params.userId;
+            let userData : IUser;
+            try {
+                userData = await userDBInteractions.find(userId);
+                userData.isApproved = true;
+                await userDBInteractions.update(userId, userData);
+                res.status(statusCodes.SUCCESS);
+            } catch (error) {
+                res.status(statusCodes.SERVER_ERROR).json(error);
+            }
 
+        }
+    },
     verifyEmail: async (req: Request, res: Response) => {
         const verifiedHtml = '<h1>You have been verified! You may close this window.</h1>'
 

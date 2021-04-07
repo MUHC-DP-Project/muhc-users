@@ -1,111 +1,111 @@
- import { Request, Response } from "express";
-import { validationResult } from "express-validator/check";
-import { IUserModel } from "../database/models/Users";
-import { statusCodes } from "../config/statusCodes";
-import { userDBInteractions } from "../database/interactions/user";
-import { errorMessage } from "../config/errorFormatter";
-import { IUser } from "../interfaces/IUser";
-import { v1 as uuidv1 } from "uuid";
+import {Request, Response} from "express";
+import {validationResult} from "express-validator/check";
+import {IUserModel} from "../database/models/Users";
+import {statusCodes} from "../config/statusCodes";
+import {userDBInteractions} from "../database/interactions/user";
+import {errorMessage} from "../config/errorFormatter";
+import {IUser} from "../interfaces/IUser";
+import {v1 as uuidv1} from "uuid";
 
 const userController = {
+
+    healthcheck: async (req: Request, res: Response) => {
+        res.status(200).send("Success");
+    },
+
     getall: async (req: Request, res: Response) => {
+
         try {
             const users = await userDBInteractions.all();
-            res.status(statusCodes.SUCCESS).json(users);
+            res
+                .status(statusCodes.SUCCESS)
+                .json(users);
         } catch (err) {
-            res.status(statusCodes.SERVER_ERROR).json(err);
+            res
+                .status(statusCodes.SERVER_ERROR)
+                .json(err);
         }
     },
 
-    show: async (req: Request, res: Response) => {
+    show: async(req : Request, res : Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.status(statusCodes.MISSING_PARAMS).json(
-                {
-                    status: 422,
-                    message: `Error: there are missing parameters.`
-                }
-            );
+            res
+                .status(statusCodes.MISSING_PARAMS)
+                .json({status: 422, message: `Error: there are missing parameters.`});
         } else {
             try {
-                const { userId } = req.params;
+                const {userId} = req.params;
 
-                const user: IUserModel = await userDBInteractions.find(
-                    userId
-                );
+                const user : IUserModel = await userDBInteractions.find(userId);
 
                 user
-                    ? res.status(statusCodes.SUCCESS).json(user)
-                    : res.status(statusCodes.NOT_FOUND).json({
-                          status: statusCodes.NOT_FOUND,
-                          message: "Problem not found"
-                      });
+                    ? res
+                        .status(statusCodes.SUCCESS)
+                        .json(user)
+                    : res
+                        .status(statusCodes.NOT_FOUND)
+                        .json({status: statusCodes.NOT_FOUND, message: "Problem not found"});
 
             } catch (error) {
-                res.status(statusCodes.SERVER_ERROR).json(error);
+                res
+                    .status(statusCodes.SERVER_ERROR)
+                    .json(error);
             }
         }
     },
 
-    update: async (req: Request, res: Response) => {
+    update: async(req : Request, res : Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.status(statusCodes.MISSING_PARAMS).json(
-                {
-                    status: 422,
-                    message: `Error: updating was done incorrectly.`
-                }
-            );
+            res
+                .status(statusCodes.MISSING_PARAMS)
+                .json({status: 422, message: `Error: updating was done incorrectly.`});
         } else {
             try {
-                const { userId } = req.params;
-                const user: IUserModel = await userDBInteractions.find(userId);
+                const {userId} = req.params;
+                const user : IUserModel = await userDBInteractions.find(userId);
 
-                if(!user)
-                    res.status(statusCodes.NOT_FOUND).json({
-                        status: statusCodes.NOT_FOUND,
-                        message: "User not found"
-                    });
-                else{
-                    const updatedUserBody: IUser = {
-                        ...req.body,
+                if (!user)
+                    res.status(statusCodes.NOT_FOUND).json({status: statusCodes.NOT_FOUND, message: "User not found"});
+                else {
+                    const updatedUserBody : IUser = {
+                        ...req.body
                     };
 
-                    const updatedUser: IUserModel = await userDBInteractions.update(
-                        userId,
-                        updatedUserBody
-                    );
+                    const updatedUser : IUserModel = await userDBInteractions.update(userId, updatedUserBody);
 
-                    const {password, ...updatedUserWithoutPassword} = updatedUser.toJSON();
+                    const {
+                        password,
+                        ...updatedUserWithoutPassword
+                    } = updatedUser.toJSON();
 
-                    res.status(statusCodes.SUCCESS).json(updatedUserWithoutPassword);
+                    res
+                        .status(statusCodes.SUCCESS)
+                        .json(updatedUserWithoutPassword);
 
                 }
             } catch (error) {
-                res.status(statusCodes.SERVER_ERROR).json(error);
+                res
+                    .status(statusCodes.SERVER_ERROR)
+                    .json(error);
             }
         }
     },
 
-    delete: async (req: Request, res: Response) => {
+    delete: async(req : Request, res : Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.status(statusCodes.MISSING_PARAMS).json(
-                {
-                    status: 422,
-                    message: `Error: there are missing parameters.`
-                }
-            );
+            res
+                .status(statusCodes.MISSING_PARAMS)
+                .json({status: 422, message: `Error: there are missing parameters.`});
         } else {
             try {
                 const user : IUserModel= await userDBInteractions.find(req.params.userId);
                 if (!user) {
-                    res.status(statusCodes.NOT_FOUND).json(
-                        {
-                            status: statusCodes.NOT_FOUND,
-                            message: "User not found"
-                        }
-                    );
+                    res
+                        .status(statusCodes.NOT_FOUND)
+                        .json({status: statusCodes.NOT_FOUND, message: "User not found"});
                 }
                 const projectListOfUser = {
                     PIListOfProjects: user.PIListOfProjects || [],
@@ -122,43 +122,47 @@ const userController = {
         }
     },
 
-    connectToProjects: async (req: Request, res: Response) => {
+    connectToProjects: async(req : Request, res : Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.status(statusCodes.MISSING_PARAMS).json(
-                {
-                    status: 422,
-                    message: `Error: Connecting users to projects was done incorrectly.`
-                }
-            );
+            res
+                .status(statusCodes.MISSING_PARAMS)
+                .json({status: 422, message: `Error: Connecting users to projects was done incorrectly.`});
         } else {
-            try{
+            try {
                 const projectId = req.params.projectId;
+                const ownerEmail = req.params.ownerEmail;
                 const pIListOfProjects = req.body.PIListOfProjects;
                 const coIListOfProjects = req.body.CoIListOfProjects;
                 const colListOfProjects = req.body.ColListOfProjects;
 
-                const piList = pIListOfProjects.map(
-                    (x) => { return userDBInteractions.linkProject(x, projectId, "PIListOfProjects")}
-                );
+                const userProjectList= userDBInteractions.linkProject(ownerEmail, projectId, "userListOfProjects");
 
-                const coList = coIListOfProjects.map(
-                    (x) => { return userDBInteractions.linkProject(x, projectId, "CoIListOfProjects")}
-                );
+                const piList = pIListOfProjects.map((x) => {
+                    return userDBInteractions.linkProject(x, projectId, "PIListOfProjects")
+                });
 
-                const colList = colListOfProjects.map(
-                    (x) => { return userDBInteractions.linkProject(x, projectId, "ColListOfProjects")}
-                );
+                const coList = coIListOfProjects.map((x) => {
+                    return userDBInteractions.linkProject(x, projectId, "CoIListOfProjects")
+                });
 
-                await Promise.all(piList + coList + colList);
+                const colList = colListOfProjects.map((x) => {
+                    return userDBInteractions.linkProject(x, projectId, "ColListOfProjects")
+                });
 
-                res.status(statusCodes.SUCCESS).send();
+                await Promise.all(userProjectList+piList + coList + colList);
 
-            }catch(err){
-                res.status(statusCodes.SERVER_ERROR).send(err);
+                res
+                    .status(statusCodes.SUCCESS)
+                    .send();
+
+            } catch (err) {
+                res
+                    .status(statusCodes.SERVER_ERROR)
+                    .send(err);
             }
 
         }
     }
 };
-export { userController };
+export {userController};

@@ -6,6 +6,11 @@ import { userValidator } from "../validators/user";
 const userRouter: Router = Router();
 
 userRouter.get(
+    "/healthcheck",
+    userController.healthcheck
+);
+
+userRouter.get(
     "/",
     authMiddleware,
     userValidator("GET /users"),
@@ -27,7 +32,7 @@ userRouter.put(
 );
 
 userRouter.put(
-    "/connectToProjects/:projectId",
+    "/connectToProjects/:projectId/:ownerEmail",
     userValidator("PUT /users/connectToProjects"),
     userController.connectToProjects
 );

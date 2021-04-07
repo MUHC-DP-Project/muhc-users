@@ -8,7 +8,7 @@ WORKDIR /app
 RUN npm config set unsafe-perm true
 RUN npm install --global typescript@latest
 
-COPY package*.json tsconfig.json tslint.json .env /app/
+COPY package*.json tsconfig.json tslint.json /app/
 RUN npm install\
         && npm install tsc -g
 
