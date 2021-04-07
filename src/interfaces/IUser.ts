@@ -26,6 +26,10 @@ export interface IUser {
     role:string;
     researchInterests:string[];
 
+    PIListOfProjects: [{type: string}];
+    CoIListOfProjects: [{type: string}];
+    ColListOfProjects: [{type: string}];
+
     // submit
     levelOfResearch:string;
     motivationForJoining:string[];

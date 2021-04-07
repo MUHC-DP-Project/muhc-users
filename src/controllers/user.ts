@@ -98,18 +98,7 @@ const userController = {
             );
         } else {
             try {
-
-                if (res.locals._id !== req.params.userId) {
-                    let message = undefined;
-                    const userOfRequest : IUserModel = await userDBInteractions.find(res.locals._id);
-                    if(!userOfRequest) {
-                       message = "User that performed the request is not found";
-                    } else if (userOfRequest.) {
-
-                    }
-                    
-                }
-                const user = await userDBInteractions.find(req.params.userId);
+                const user : IUserModel= await userDBInteractions.find(req.params.userId);
                 if (!user) {
                     res.status(statusCodes.NOT_FOUND).json(
                         {
@@ -118,8 +107,14 @@ const userController = {
                         }
                     );
                 }
+                const projectListOfUser = {
+                    PIListOfProjects: user.PIListOfProjects || [],
+                    CoIListOfProjects: user.CoIListOfProjects || [],
+                    ColListOfProjects: user.ColListOfProjects || []
+                };
+
                 user.delete();
-                res.status(statusCodes.SUCCESS).send();
+                res.status(statusCodes.SUCCESS).json(projectListOfUser);
             } catch(err) {
                 res.status(statusCodes.SERVER_ERROR).send(err);
             }
