@@ -219,44 +219,7 @@ const userController = {
                     .status(statusCodes.SERVER_ERROR)
                     .send(err);
             }
-
         }
     },
-    setPrivileges: async(req : Request, res : Response) => {
-        const errors = validationResult(req);
-        const allowedUserRoles = ['User', 'Admin', 'ClinicManager'];
-        if (!errors.isEmpty()) {
-            res
-                .status(statusCodes.MISSING_PARAMS)
-                .json({status: 422, message: "Missing Parameters"});
-        } else {
-            const userRole = req.body.userRole || 'Admin';
-            const userId = req.body.userId;
-
-
-            try {
-                const resquester : IUserModel = await userDBInteractions.find(res.locals._id);
-                if(!allowedUserRoles.includes(userRole)) {
-                    throw new Error('User role you are trying to set is invalid');
-                } else if(!resquester || resquester.userRole !== 'Admin') {
-                    throw new Error('Invalid Permission');
-                } 
-                const user : IUserModel= await userDBInteractions.find(userId);
-
-                if(!user) {
-                    throw new Error('User not found');
-                }
-
-                user.userRole = userRole;
-                await userDBInteractions.update(userId, user);
-            } catch (err) {
-                res
-                    .status(statusCodes.SERVER_ERROR)
-                    .send(err.message);
-            }
-
-            res.status(statusCodes.SUCCESS).send();
-        }
-    }
 };
 export {userController};
