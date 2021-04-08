@@ -10,6 +10,13 @@ userRouter.get(
     userController.healthcheck
 );
 
+userRouter.post(
+    "/findidsbyemail",
+    authMiddleware,
+    userValidator("POST /users/findidsbyemail"),
+    userController.getallbyemail
+);
+
 userRouter.get(
     "/",
     authMiddleware,
@@ -43,5 +50,12 @@ userRouter.delete(
     userValidator("DELETE /users/:userId"),
     userController.delete
 );
+
+userRouter.post(
+    '/setPrivileges',
+    authMiddleware,
+    userValidator("POST /users/setPrivileges"),
+    userController.setPrivileges
+)
 
 export {userRouter};

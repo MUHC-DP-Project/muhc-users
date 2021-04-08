@@ -6,7 +6,7 @@ export interface IUser {
     isEmailVerified: boolean;
     email: string;
     verificationNotes: string;
-
+    userRole: string,
 
     // profile
     salutation:string;
@@ -25,6 +25,10 @@ export interface IUser {
     workStatus:string;
     role:string;
     researchInterests:string[];
+
+    PIListOfProjects: [{type: string}];
+    CoIListOfProjects: [{type: string}];
+    ColListOfProjects: [{type: string}];
 
     // submit
     levelOfResearch:string;

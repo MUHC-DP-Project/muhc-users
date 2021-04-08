@@ -27,6 +27,29 @@ const userController = {
         }
     },
 
+    getallbyemail: async (req : Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res
+                .status(statusCodes.MISSING_PARAMS)
+                .json({status: 422, message: `Error: there are missing parameters.`});
+        } else {
+            try {
+                const emails = req.body.emails;
+
+                const userIds = await Promise.all(emails.map(async (email) =>
+                    userDBInteractions.findByEmail(email).then((user) => {
+                        return user._id;
+                    })
+                ));
+
+                res.status(statusCodes.SUCCESS).json(userIds);
+            } catch (err) {
+                res.status(statusCodes.SERVER_ERROR).json(err);
+            }
+        }
+    },
+
     show: async(req : Request, res : Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -101,25 +124,62 @@ const userController = {
                 .json({status: 422, message: `Error: there are missing parameters.`});
         } else {
             try {
-                const user = await userDBInteractions.find(req.params.userId);
+                const user : IUserModel= await userDBInteractions.find(req.params.userId);
                 if (!user) {
                     res
                         .status(statusCodes.NOT_FOUND)
                         .json({status: statusCodes.NOT_FOUND, message: "User not found"});
                 }
+                const projectListOfUser = {
+                    PIListOfProjects: user.PIListOfProjects || [],
+                    CoIListOfProjects: user.CoIListOfProjects || [],
+                    ColListOfProjects: user.ColListOfProjects || []
+                };
+
                 user.delete();
-                res
-                    .status(statusCodes.SUCCESS)
-                    .send();
-            } catch (err) {
-                res
-                    .status(statusCodes.SERVER_ERROR)
-                    .send(err);
+                res.status(statusCodes.SUCCESS).json(projectListOfUser);
+            } catch(err) {
+                res.status(statusCodes.SERVER_ERROR).send(err);
             }
 
         }
     },
+    setPrivileges: async(req : Request, res : Response) => {
+        const errors = validationResult(req);
+        const allowedUserRoles = ['User', 'Admin', 'ClinicManager'];
+        if (!errors.isEmpty()) {
+            res
+                .status(statusCodes.MISSING_PARAMS)
+                .json({status: 422, message: "Missing Parameters"});
+        } else {
+            const userRole = req.body.userRole || 'Admin';
+            const userId = req.body.userId;
 
+
+            try {
+                const resquester : IUserModel = await userDBInteractions.find(res.locals._id);
+                if(!allowedUserRoles.includes(userRole)) {
+                    throw new Error('User role you are trying to set is invalid');
+                } else if(!resquester || resquester.userRole !== 'Admin') {
+                    throw new Error('Invalid Permission');
+                }
+                const user : IUserModel= await userDBInteractions.find(userId);
+
+                if(!user) {
+                    throw new Error('User not found');
+                }
+
+                user.userRole = userRole;
+                await userDBInteractions.update(userId, user);
+            } catch (err) {
+                res
+                    .status(statusCodes.SERVER_ERROR)
+                    .send(err.message);
+            }
+
+            res.status(statusCodes.SUCCESS).send();
+        }
+    },
     connectToProjects: async(req : Request, res : Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -159,7 +219,6 @@ const userController = {
                     .status(statusCodes.SERVER_ERROR)
                     .send(err);
             }
-
         }
     }
 };
