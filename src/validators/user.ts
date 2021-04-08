@@ -43,9 +43,9 @@ export function userValidator(method: string): ValidationChain[] {
                 body("foundAboutUs", "Missing 'foundAboutUs'").isArray().optional(),
                 body("acceptedTermsAndConditions", "Missing 'acceptedTermsAndConditions'").isBoolean().optional(),
                 body("userPassword", "Missing 'userPassword'").isString().optional(),
-                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().exists(),
-                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().exists(),
-                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().exists(),
+                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().optional(),
+                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().optional(),
+                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().optional(),
             ];
         }
 
@@ -65,9 +65,9 @@ export function userValidator(method: string): ValidationChain[] {
                 param("ownerEmail", "Invalid or missing ':ownerEmail'")
                 .isString()
                 .exists(),
-                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().exists(),
-                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().exists(),
-                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().exists(),
+                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().optional(),
+                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().optional(),
+                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().optional(),
             ];
         }
     }
