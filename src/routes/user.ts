@@ -51,4 +51,11 @@ userRouter.delete(
     userController.delete
 );
 
+userRouter.post(
+    '/setPrivileges',
+    authMiddleware,
+    userValidator("POST /users/setPrivileges"),
+    userController.setPrivileges
+)
+
 export {userRouter};
