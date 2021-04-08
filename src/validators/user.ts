@@ -57,5 +57,13 @@ export function userValidator(method: string): ValidationChain[] {
                     .isMongoId(),
             ];
         }
+
+        case "POST /users/removeProjectConnection": {
+            return [
+                param("projectId", "Invalid or missing ':projectId'")
+                    .exists()
+                    .isMongoId(),
+            ]
+        }
     }
 }

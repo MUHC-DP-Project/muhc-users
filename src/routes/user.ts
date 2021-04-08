@@ -39,4 +39,11 @@ userRouter.delete(
     userController.delete
 );
 
+userRouter.post(
+    '/removeProjectConnection',
+    authMiddleware,
+    userValidator("POST /users/removeProjectConnection"),
+    userController.removeProjectConnection
+)
+
 export {userRouter};
