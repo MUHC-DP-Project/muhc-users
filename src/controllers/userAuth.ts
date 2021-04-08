@@ -115,6 +115,7 @@ const userAuthController = {
                 }
                 // generate session token
                 const token = jwt.sign({_id : user._id.toString(), isApproved: user.isApproved, isEmailVerified: user.isEmailVerified}, process.env.JWT_SECRET, {algorithm: 'HS256', expiresIn: '2d'});
+                user.password = undefined;
 
                 res.status(200).json({
                     user,
