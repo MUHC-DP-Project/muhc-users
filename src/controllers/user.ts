@@ -128,19 +128,19 @@ const userController = {
         } else {
             try{
                 const projectId = req.params.projectId;
-                const pIListOfProjects = req.body.PIListOfProjects;
-                const coIListOfProjects = req.body.CoIListOfProjects;
-                const colListOfProjects = req.body.ColListOfProjects;
+                const pIListOfUsers = req.body.PIListOfUsers;
+                const coIListOfUsers = req.body.CoIListOfUsers;
+                const colListOfUsers = req.body.ColListOfUsers;
 
-                const piList = pIListOfProjects.map(
+                const piList = pIListOfUsers.map(
                     (x) => { return userDBInteractions.linkProject(x, projectId, "PIListOfProjects")}
                 );
 
-                const coList = coIListOfProjects.map(
+                const coList = coIListOfUsers.map(
                     (x) => { return userDBInteractions.linkProject(x, projectId, "CoIListOfProjects")}
                 );
 
-                const colList = colListOfProjects.map(
+                const colList = colListOfUsers.map(
                     (x) => { return userDBInteractions.linkProject(x, projectId, "ColListOfProjects")}
                 );
 
@@ -153,6 +153,44 @@ const userController = {
             }
 
         }
+    },
+
+    removeProjectConnection: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        } else { 
+            try {
+                const projectId = req.params.projectId;
+                const pIListOfUsers = req.body.PIListOfUsers;
+                const coIListOfUsers = req.body.CoIListOfUsers;
+                const colListOfUsers = req.body.ColListOfUsers;
+
+                const piList = pIListOfUsers.map(
+                    (x) => { return userDBInteractions.removeProjectFromArray(x, projectId, "PIListOfProjects")}
+                );
+
+                const coList = coIListOfUsers.map(
+                    (x) => { return userDBInteractions.removeProjectFromArray(x, projectId, "CoIListOfProjects")}
+                );
+
+                const colList = colListOfUsers.map(
+                    (x) => { return userDBInteractions.removeProjectFromArray(x, projectId, "ColListOfProjects")}
+                );
+                await Promise.all(piList + coList + colList);
+
+
+            } catch(err) {
+                res.status(statusCodes.SERVER_ERROR).send(err);
+            }
+
+            res.status(statusCodes.SUCCESS).send();
+        }
     }
-};
+}
 export { userController };
