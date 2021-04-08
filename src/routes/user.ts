@@ -11,6 +11,13 @@ userRouter.get(
 );
 
 userRouter.get(
+    "/findidsbyemail",
+    authMiddleware,
+    userValidator("GET /users/findidsbyemail"),
+    userController.getallbyemail
+);
+
+userRouter.get(
     "/",
     authMiddleware,
     userValidator("GET /users"),

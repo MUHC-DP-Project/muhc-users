@@ -27,6 +27,29 @@ const userController = {
         }
     },
 
+    getallbyemail: async (req : Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res
+                .status(statusCodes.MISSING_PARAMS)
+                .json({status: 422, message: `Error: there are missing parameters.`});
+        } else {
+            try {
+                const emails = req.body.emails;
+
+                const userIds = await Promise.all(emails.map(async (email) =>
+                    userDBInteractions.findByEmail(email).then((user) => {
+                        return user._id;
+                    })
+                ));
+
+                res.status(statusCodes.SUCCESS).json(userIds);
+            } catch (err) {
+                res.status(statusCodes.SERVER_ERROR).json(err);
+            }
+        }
+    },
+
     show: async(req : Request, res : Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
