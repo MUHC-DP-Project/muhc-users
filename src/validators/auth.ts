@@ -41,7 +41,7 @@ export function authValidator(method: string): ValidationChain[] {
 
         case 'GET /localApproveUser/:userId':{
             return [param("userId", "Invalid or missing 'userId'").isString().exists()];
-
+        }
         case "POST /refreshToken" : {
             return [header("authorization", "Invalid or missing 'authorization'").isString().exists()];
 
