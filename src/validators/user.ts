@@ -12,6 +12,13 @@ export function userValidator(method: string): ValidationChain[] {
                 .isMongoId()
             ];
         }
+
+        case "GET /users/findidsbyemail": {
+            return [
+                body("emails", "Invalid or missing 'emails' in request body").isArray().exists()
+            ];
+        }
+
         case "PUT /users/:userId": {
             return [
                 param("userId", "Invalid or missing ':userId'")
