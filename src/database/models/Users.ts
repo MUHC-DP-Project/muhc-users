@@ -17,6 +17,10 @@ const userSchema: Schema = new Schema(
         type: String,
         select: false
     },
+    userRole: {
+        type: String,
+        default: 'User'
+    },
     isApproved: Boolean,
     isEmailVerified: Boolean,
     firstName:String,

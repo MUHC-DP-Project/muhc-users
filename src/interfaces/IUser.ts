@@ -8,7 +8,6 @@ export interface IUser {
     verificationNotes: string;
     userRole: string,
 
-
     // profile
     salutation:string;
     firstName:string;

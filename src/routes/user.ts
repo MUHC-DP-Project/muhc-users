@@ -10,10 +10,10 @@ userRouter.get(
     userController.healthcheck
 );
 
-userRouter.get(
+userRouter.post(
     "/findidsbyemail",
     authMiddleware,
-    userValidator("GET /users/findidsbyemail"),
+    userValidator("POST /users/findidsbyemail"),
     userController.getallbyemail
 );
 

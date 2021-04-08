@@ -13,7 +13,7 @@ export function userValidator(method: string): ValidationChain[] {
             ];
         }
 
-        case "GET /users/findidsbyemail": {
+        case "POST /users/findidsbyemail": {
             return [
                 body("emails", "Invalid or missing 'emails' in request body").isArray().exists()
             ];
