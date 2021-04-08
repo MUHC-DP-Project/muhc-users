@@ -23,6 +23,10 @@ const userSchema: Schema = new Schema(
     lastName:String,
     professionalOccupation:String,
     verificationNotes: String,
+    userRole: {
+        type: String,
+        default: 'User'
+    },
 
     // references to project IDs
     userListOfProjects:[{type: String}],

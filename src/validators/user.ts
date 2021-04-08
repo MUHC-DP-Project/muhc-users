@@ -70,5 +70,12 @@ export function userValidator(method: string): ValidationChain[] {
                 body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().optional(),
             ];
         }
+
+        case "POST /users/setPrivileges" : {
+            return [
+                body("userRole", "Invalid or missing 'userRole'").isString().optional(),
+                body("userId", "Invalid or missing 'userId'").isString().exists()
+            ]
+        }
     }
 }

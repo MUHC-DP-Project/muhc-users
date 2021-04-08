@@ -6,6 +6,7 @@ export interface IUser {
     isEmailVerified: boolean;
     email: string;
     verificationNotes: string;
+    userRole: string,
 
 
     // profile
