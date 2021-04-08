@@ -13,7 +13,7 @@ export function userValidator(method: string): ValidationChain[] {
             ];
         }
 
-        case "GET /users/findidsbyemail": {
+        case "POST /users/findidsbyemail": {
             return [
                 body("emails", "Invalid or missing 'emails' in request body").isArray().exists()
             ];
@@ -69,6 +69,12 @@ export function userValidator(method: string): ValidationChain[] {
                 body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().optional(),
                 body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().optional(),
             ];
+        }
+        case "POST /users/setPrivileges" : {
+            return [
+                body("userRole", "Invalid or missing 'userRole'").isString().optional(),
+                body("userId", "Invalid or missing 'userId'").isString().exists()
+            ]
         }
     }
 }
