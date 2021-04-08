@@ -50,10 +50,12 @@ userRouter.delete(
     userValidator("DELETE /users/:userId"),
     userController.delete
 );
+
 userRouter.post(
     '/setPrivileges',
     authMiddleware,
     userValidator("POST /users/setPrivileges"),
     userController.setPrivileges
 )
+
 export {userRouter};
