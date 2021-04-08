@@ -68,6 +68,7 @@ export function userValidator(method: string): ValidationChain[] {
                 body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().optional(),
                 body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().optional(),
                 body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().optional(),
+
             ];
         }
 

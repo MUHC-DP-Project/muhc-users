@@ -220,6 +220,6 @@ const userController = {
                     .send(err);
             }
         }
-    },
+    }
 };
 export {userController};
