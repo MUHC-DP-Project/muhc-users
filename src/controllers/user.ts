@@ -131,9 +131,10 @@ const userController = {
                         .json({status: statusCodes.NOT_FOUND, message: "User not found"});
                 }
                 const projectListOfUser = {
-                    PIListOfProjects: user.PIListOfProjects || [],
-                    CoIListOfProjects: user.CoIListOfProjects || [],
-                    ColListOfProjects: user.ColListOfProjects || []
+                    userEmail: user.email,
+                    principalInvestigators: user.PIListOfProjects || [],
+                    coInvestigators: user.CoIListOfProjects || [],
+                    collaborators: user.ColListOfProjects || []
                 };
 
                 user.delete();
@@ -207,6 +208,7 @@ const userController = {
 
                 await Promise.all(piList.concat(coList).concat(colList));
 
+                res.status(statusCodes.SUCCESS).send()
             }catch(err){
                 res.status(statusCodes.SERVER_ERROR).send(err);
             }
