@@ -39,10 +39,20 @@ export const userDBInteractions = {
         connectionType: string,
 
     ): Promise<IUserModel> => {
-        console.log(userEmail + " " + projectId + " " + [connectionType]);
         return User.findOneAndUpdate(
             { email: userEmail},
             { $addToSet: { [connectionType]: projectId }}, {new : true}).exec();
+    },
+
+    removeProjectFromArray: (
+        userEmail: string,
+        projectId: string,
+        connectionType: string,
+
+    ) : Promise<{ ok: number; n: number; nModified: number; }> => {
+        const toRemove = {};
+        toRemove[connectionType] = [projectId]
+        return User.updateOne({email: userEmail}, {$pullAll: toRemove}).exec();
     }
 
 }

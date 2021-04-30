@@ -72,6 +72,14 @@ export function userValidator(method: string): ValidationChain[] {
             ];
         }
 
+        case "POST /users/removeProjectConnection": {
+            return [
+                body("projectId", "Invalid or missing ':projectId'")
+                    .exists()
+                    .isMongoId(),
+            ];
+         }
+
         case "POST /users/setPrivileges" : {
             return [
                 body("userRole", "Invalid or missing 'userRole'").isString().optional(),

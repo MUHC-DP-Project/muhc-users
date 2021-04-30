@@ -52,10 +52,17 @@ userRouter.delete(
 );
 
 userRouter.post(
+    '/removeProjectConnection',
+    authMiddleware,
+    userValidator("POST /users/removeProjectConnection"),
+    userController.removeProjectConnection
+);
+
+userRouter.post(
     '/setPrivileges',
     authMiddleware,
     userValidator("POST /users/setPrivileges"),
     userController.setPrivileges
-)
+);
 
 export {userRouter};

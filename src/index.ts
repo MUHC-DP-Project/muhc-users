@@ -22,6 +22,7 @@ dotenv.config();
 
 // connect to database
 connectDB(process.env.MONGO_DB_URI);
+// connectDB(process.env.MONGO_TEST_DB_URI);
 
 // define a route handler for the default home page
 app.get( "/", ( req, res ) => {
