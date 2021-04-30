@@ -128,9 +128,9 @@ const userController = {
         } else {
             try{
                 const projectId = req.params.projectId;
-                const pIListOfUsers = req.body.PIListOfUsers;
-                const coIListOfUsers = req.body.CoIListOfUsers;
-                const colListOfUsers = req.body.ColListOfUsers;
+                const pIListOfUsers = req.body.principalInvestigators;
+                const coIListOfUsers = req.body.coInvestigators;
+                const colListOfUsers = req.body.collaborators;
 
                 const piList = pIListOfUsers.map(
                     (x) => { return userDBInteractions.linkProject(x, projectId, "PIListOfProjects")}
@@ -144,11 +144,12 @@ const userController = {
                     (x) => { return userDBInteractions.linkProject(x, projectId, "ColListOfProjects")}
                 );
 
-                await Promise.all(piList + coList + colList);
+                await Promise.all(piList.concat(coList).concat(colList));
 
                 res.status(statusCodes.SUCCESS).send();
 
             }catch(err){
+                console.log(err);
                 res.status(statusCodes.SERVER_ERROR).send(err);
             }
 
@@ -164,12 +165,12 @@ const userController = {
                     message: `Error: there are missing parameters.`
                 }
             );
-        } else { 
+        } else {
             try {
-                const projectId = req.params.projectId;
-                const pIListOfUsers = req.body.PIListOfUsers;
-                const coIListOfUsers = req.body.CoIListOfUsers;
-                const colListOfUsers = req.body.ColListOfUsers;
+                const projectId = req.body.projectId;
+                const pIListOfUsers = req.body.principalInvestigators;
+                const coIListOfUsers = req.body.coInvestigators;
+                const colListOfUsers = req.body.collaborators;
 
                 const piList = pIListOfUsers.map(
                     (x) => { return userDBInteractions.removeProjectFromArray(x, projectId, "PIListOfProjects")}
@@ -182,7 +183,7 @@ const userController = {
                 const colList = colListOfUsers.map(
                     (x) => { return userDBInteractions.removeProjectFromArray(x, projectId, "ColListOfProjects")}
                 );
-                await Promise.all(piList + coList + colList);
+                await Promise.all(piList.concat(coList).concat(colList));
 
 
             } catch(err) {
