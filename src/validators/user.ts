@@ -12,6 +12,13 @@ export function userValidator(method: string): ValidationChain[] {
                 .isMongoId()
             ];
         }
+
+        case "POST /users/findidsbyemail": {
+            return [
+                body("emails", "Invalid or missing 'emails' in request body").isArray().exists()
+            ];
+        }
+
         case "PUT /users/:userId": {
             return [
                 param("userId", "Invalid or missing ':userId'")
@@ -36,9 +43,9 @@ export function userValidator(method: string): ValidationChain[] {
                 body("foundAboutUs", "Missing 'foundAboutUs'").isArray().optional(),
                 body("acceptedTermsAndConditions", "Missing 'acceptedTermsAndConditions'").isBoolean().optional(),
                 body("userPassword", "Missing 'userPassword'").isString().optional(),
-                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().exists(),
-                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().exists(),
-                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().exists(),
+                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().optional(),
+                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().optional(),
+                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().optional(),
             ];
         }
 
@@ -55,6 +62,13 @@ export function userValidator(method: string): ValidationChain[] {
                 param("projectId", "Invalid or missing ':projectId'")
                     .exists()
                     .isMongoId(),
+                param("ownerEmail", "Invalid or missing ':ownerEmail'")
+                .isString()
+                .exists(),
+                body("PIListOfProjects", "Invalid or missing 'PIListOfProjects'").isArray().optional(),
+                body("CoIListOfProjects", "Invalid or missing 'CoIListOfProjects'").isArray().optional(),
+                body("ColListOfProjects", "Invalid or missing 'ColListOfProjects'").isArray().optional(),
+
             ];
         }
 
@@ -63,6 +77,13 @@ export function userValidator(method: string): ValidationChain[] {
                 body("projectId", "Invalid or missing ':projectId'")
                     .exists()
                     .isMongoId(),
+            ];
+         }
+
+        case "POST /users/setPrivileges" : {
+            return [
+                body("userRole", "Invalid or missing 'userRole'").isString().optional(),
+                body("userId", "Invalid or missing 'userId'").isString().exists()
             ]
         }
     }

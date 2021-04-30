@@ -6,6 +6,18 @@ import { userValidator } from "../validators/user";
 const userRouter: Router = Router();
 
 userRouter.get(
+    "/healthcheck",
+    userController.healthcheck
+);
+
+userRouter.post(
+    "/findidsbyemail",
+    authMiddleware,
+    userValidator("POST /users/findidsbyemail"),
+    userController.getallbyemail
+);
+
+userRouter.get(
     "/",
     authMiddleware,
     userValidator("GET /users"),
@@ -27,7 +39,7 @@ userRouter.put(
 );
 
 userRouter.put(
-    "/connectToProjects/:projectId",
+    "/connectToProjects/:projectId/:ownerEmail",
     userValidator("PUT /users/connectToProjects"),
     userController.connectToProjects
 );
@@ -44,6 +56,13 @@ userRouter.post(
     authMiddleware,
     userValidator("POST /users/removeProjectConnection"),
     userController.removeProjectConnection
-)
+);
+
+userRouter.post(
+    '/setPrivileges',
+    authMiddleware,
+    userValidator("POST /users/setPrivileges"),
+    userController.setPrivileges
+);
 
 export {userRouter};

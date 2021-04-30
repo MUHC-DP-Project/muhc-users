@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { request, Request, Response } from "express";
 import { validationResult } from "express-validator/check";
 import { IUserModel } from "../database/models/Users";
 import { userDBInteractions } from "../database/interactions/user";
@@ -115,10 +115,12 @@ const userAuthController = {
                 }
                 // generate session token
                 const token = jwt.sign({_id : user._id.toString(), isApproved: user.isApproved, isEmailVerified: user.isEmailVerified}, process.env.JWT_SECRET, {algorithm: 'HS256', expiresIn: '2d'});
+                user.password = undefined;
 
                 res.status(200).json({
                     user,
-                    token
+                    token,
+                    expiresIn: '2d'
                 });
             }
             catch (error) {
@@ -164,7 +166,29 @@ const userAuthController = {
             });
         }
     },
+    localApproveUser:async (req: Request,res:Response)=>{
+        const errors=validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        }else{
+            const userId=req.params.userId;
+            let userData : IUser;
+            try {
+                userData = await userDBInteractions.find(userId);
+                userData.isApproved = true;
+                await userDBInteractions.update(userId, userData);
+                res.status(statusCodes.SUCCESS);
+            } catch (error) {
+                res.status(statusCodes.SERVER_ERROR).json(error);
+            }
 
+        }
+    },
     verifyEmail: async (req: Request, res: Response) => {
         const verifiedHtml = '<h1>You have been verified! You may close this window.</h1>'
 
