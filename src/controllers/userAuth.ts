@@ -182,7 +182,7 @@ const userAuthController = {
                 userData = await userDBInteractions.find(userId);
                 userData.isApproved = true;
                 await userDBInteractions.update(userId, userData);
-                res.status(statusCodes.SUCCESS);
+                res.status(statusCodes.SUCCESS).send();
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
             }
