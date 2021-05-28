@@ -131,9 +131,10 @@ const userController = {
                         .json({status: statusCodes.NOT_FOUND, message: "User not found"});
                 }
                 const projectListOfUser = {
-                    PIListOfProjects: user.PIListOfProjects || [],
-                    CoIListOfProjects: user.CoIListOfProjects || [],
-                    ColListOfProjects: user.ColListOfProjects || []
+                    userEmail: user.email,
+                    principalInvestigators: user.PIListOfProjects || [],
+                    coInvestigators: user.CoIListOfProjects || [],
+                    collaborators: user.ColListOfProjects || []
                 };
 
                 user.delete();
@@ -189,37 +190,67 @@ const userController = {
         } else {
             try {
                 const projectId = req.params.projectId;
-                const ownerEmail = req.params.ownerEmail;
-                const pIListOfProjects = req.body.PIListOfProjects;
-                const coIListOfProjects = req.body.CoIListOfProjects;
-                const colListOfProjects = req.body.ColListOfProjects;
+                const pIListOfUsers = req.body.principalInvestigators;
+                const coIListOfUsers = req.body.coInvestigators;
+                const colListOfUsers = req.body.collaborators;
 
-                const userProjectList= userDBInteractions.linkProject(ownerEmail, projectId, "userListOfProjects");
+                const piList = pIListOfUsers.map(
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "PIListOfProjects")}
+                );
 
-                const piList = pIListOfProjects.map((x) => {
-                    return userDBInteractions.linkProject(x, projectId, "PIListOfProjects")
-                });
+                const coList = coIListOfUsers.map(
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "CoIListOfProjects")}
+                );
 
-                const coList = coIListOfProjects.map((x) => {
-                    return userDBInteractions.linkProject(x, projectId, "CoIListOfProjects")
-                });
+                const colList = colListOfUsers.map(
+                    (x) => { return userDBInteractions.linkProject(x, projectId, "ColListOfProjects")}
+                );
 
-                const colList = colListOfProjects.map((x) => {
-                    return userDBInteractions.linkProject(x, projectId, "ColListOfProjects")
-                });
+                await Promise.all(piList.concat(coList).concat(colList));
 
-                await Promise.all(userProjectList+piList + coList + colList);
-
-                res
-                    .status(statusCodes.SUCCESS)
-                    .send();
-
-            } catch (err) {
-                res
-                    .status(statusCodes.SERVER_ERROR)
-                    .send(err);
+                res.status(statusCodes.SUCCESS).send()
+            }catch(err){
+                res.status(statusCodes.SERVER_ERROR).send(err);
             }
         }
+    },
+
+    removeProjectConnection: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(
+                {
+                    status: 422,
+                    message: `Error: there are missing parameters.`
+                }
+            );
+        } else {
+            try {
+                const projectId = req.body.projectId;
+                const pIListOfUsers = req.body.principalInvestigators;
+                const coIListOfUsers = req.body.coInvestigators;
+                const colListOfUsers = req.body.collaborators;
+
+                const piList = pIListOfUsers.map(
+                    (x) => { return userDBInteractions.removeProjectFromArray(x, projectId, "PIListOfProjects")}
+                );
+
+                const coList = coIListOfUsers.map(
+                    (x) => { return userDBInteractions.removeProjectFromArray(x, projectId, "CoIListOfProjects")}
+                );
+
+                const colList = colListOfUsers.map(
+                    (x) => { return userDBInteractions.removeProjectFromArray(x, projectId, "ColListOfProjects")}
+                );
+                await Promise.all(piList.concat(coList).concat(colList));
+
+
+            } catch(err) {
+                res.status(statusCodes.SERVER_ERROR).send(err);
+            }
+
+            res.status(statusCodes.SUCCESS).send();
+        }
     }
-};
-export {userController};
+}
+export { userController };
